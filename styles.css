@@ -1,0 +1,877 @@
+/* =====================================================================
+   Qissah Keyboard — Neo-Brutalism Stylesheet
+   RTL, Cairo font, bold borders, hard solid shadows.
+   ===================================================================== */
+
+:root {
+  --color-black: #000000;
+  --color-purple: #8C61E6;
+  --color-active: #262626;
+  --color-bg-start: #FFE8B6;
+  --color-bg-end: #F5F2EA;
+
+  --shape-circle: #3CD0FF;
+  --shape-square: #FF3737;
+  --shape-triangle: #FFB842;
+  --shape-polygon: #8C61E7;
+
+  --border-thick: 3px solid var(--color-black);
+  --shadow-hard: 4px 4px 0px var(--color-black);
+  --shadow-hard-lg: 6px 6px 0px var(--color-black);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Guard against our own `display` utility classes (flex/inline-flex) accidentally
+   overriding the native [hidden] attribute due to equal CSS specificity. */
+[hidden] {
+  display: none !important;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  direction: rtl;
+  font-family: 'Cairo', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  /* Global radial gradient background */
+  background: radial-gradient(circle, var(--color-bg-start) 0%, var(--color-bg-end) 100%);
+  color: var(--color-black);
+}
+
+/* Swapped in via JS while an admin has Developer View active, to make Dev Mode unmistakable */
+body.dev-mode-active {
+  background: radial-gradient(circle, #FFAF00 0%, var(--color-bg-end) 100%);
+}
+
+h1, h2, h3, h4 {
+  color: var(--color-black);
+  margin: 0;
+}
+
+button {
+  font-family: 'Cairo', sans-serif;
+  cursor: pointer;
+}
+
+/* ===================== Generic Neo-Brutalist Button ===================== */
+
+.btn {
+  background-color: var(--color-purple);
+  color: #fff;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+  border: 2px solid var(--color-black);
+  border-radius: 10px;
+  box-shadow: var(--shadow-hard);
+  padding: 10px 20px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, text-shadow 0.15s ease;
+}
+
+.btn:hover {
+  /* Neo-brutalist "push" effect */
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--color-black);
+  text-shadow: 0 0 9px rgba(255, 255, 255, 0.95);
+}
+
+.btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px var(--color-black);
+}
+
+.btn--nav {
+  /* Fixed height so the logo can be sized to match and stay flush top/bottom */
+  height: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 20px;
+  font-size: 0.95rem;
+  border-radius: 8px;
+}
+
+.btn--upgrade {
+  background-color: var(--shape-triangle);
+}
+
+.btn--outline {
+  background: #fff;
+  color: var(--color-black);
+  text-shadow: none;
+}
+
+.btn--outline:hover {
+  text-shadow: none;
+}
+
+.btn--danger {
+  background-color: var(--shape-square);
+}
+
+.btn--cta {
+  padding: 14px 32px;
+  font-size: 1.1rem;
+  border-radius: 12px;
+}
+
+/* ============================== Navbar ============================== */
+
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 6px 32px;
+  background: var(--color-bg-end);
+  border-bottom: var(--border-thick);
+}
+
+.navbar__logo {
+  /* The source PNG has heavy transparent padding around the mark; crop it via
+     overflow:hidden + an oversized, shifted image so only the keycap glyph shows. */
+  height: 60px;
+  width: 92px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar__logo img {
+  height: 330%;
+  width: auto;
+  max-width: none;
+  transform: translateY(12%);
+}
+
+.navbar__links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.navbar__auth {
+  display: flex;
+  align-items: center;
+  /* Keeps the logo+links grouped tightly while pushing auth controls to the far edge */
+  margin-inline-start: auto;
+}
+
+.navbar__user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Small square icon button (e.g. nickname edit pencil) matching the navbar button height */
+.icon-btn {
+  height: 52px;
+  width: 52px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: var(--color-black);
+  border: 2px solid var(--color-black);
+  border-radius: 8px;
+  box-shadow: var(--shadow-hard);
+  font-size: 0.95rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.icon-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--color-black);
+}
+
+.icon-btn:active {
+  transform: translate(4px, 4px);
+  box-shadow: 0px 0px 0px var(--color-black);
+}
+
+/* ============================== Views ============================== */
+
+.view {
+  min-height: calc(100vh - 76px);
+}
+
+/* ============================== Hero / Landing ============================== */
+
+.hero {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 76px);
+  padding: 60px 20px;
+  overflow: hidden;
+}
+
+.hero__content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 700px;
+}
+
+.hero__title {
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 900;
+  color: var(--color-black);
+  line-height: 1.3;
+}
+
+.hero__subtitle {
+  margin-top: 18px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.hero__content .btn--cta {
+  margin-top: 32px;
+}
+
+/* Floating 3D shapes */
+.shape {
+  position: absolute;
+  z-index: 1;
+  animation: float 5s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-16px); }
+}
+
+.shape-circle {
+  top: 12%;
+  right: 10%;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  background: var(--shape-circle);
+  border: var(--border-thick);
+  box-shadow: var(--shadow-hard);
+}
+
+.shape-square {
+  bottom: 15%;
+  right: 14%;
+  width: 60px;
+  height: 60px;
+  border-radius: 8px;
+  background: var(--shape-square);
+  border: var(--border-thick);
+  box-shadow: var(--shadow-hard);
+  animation-delay: 0.6s;
+}
+
+.shape-triangle {
+  /* Nudged in from the corner, closer to (but still clear of) the hero copy */
+  top: 12%;
+  left: 8%;
+  width: 80px;
+  height: 80px;
+  /* Thin hard outline around the combined shadow+fill silhouette */
+  filter:
+    drop-shadow(-2px 0 0 var(--color-black))
+    drop-shadow(2px 0 0 var(--color-black))
+    drop-shadow(0 -2px 0 var(--color-black))
+    drop-shadow(0 2px 0 var(--color-black));
+  animation-delay: 1.2s;
+}
+
+.shape-triangle__shadow,
+.shape-triangle__fill {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+/* Solid black duplicate offset behind the fill — same hard "3D" shadow block the circle/square get from box-shadow */
+.shape-triangle__shadow {
+  background: var(--color-black);
+  transform: translate(4px, 4px);
+}
+
+.shape-triangle__fill {
+  background: var(--shape-triangle);
+}
+
+.shape-polygon {
+  bottom: 12%;
+  left: 16%;
+  width: 90px;
+  height: 90px;
+  filter:
+    drop-shadow(-2px 0 0 var(--color-black))
+    drop-shadow(2px 0 0 var(--color-black))
+    drop-shadow(0 -2px 0 var(--color-black))
+    drop-shadow(0 2px 0 var(--color-black));
+  animation-delay: 1.8s;
+}
+
+.shape-polygon__shadow,
+.shape-polygon__fill {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+}
+
+.shape-polygon__shadow {
+  background: var(--color-black);
+  transform: translate(4px, 4px);
+}
+
+.shape-polygon__fill {
+  background: var(--shape-polygon);
+}
+
+/* ============================== Auth Page ============================== */
+
+.auth-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 76px);
+  padding: 40px 20px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border: var(--border-thick);
+  border-radius: 16px;
+  box-shadow: var(--shadow-hard-lg);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.auth-card__title {
+  text-align: center;
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 6px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field__label {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.field__input {
+  font-family: 'Cairo', sans-serif;
+  padding: 12px 14px;
+  border: var(--border-thick);
+  border-radius: 10px;
+  font-size: 1rem;
+  background: #fff;
+  outline: none;
+}
+
+.field__input:focus {
+  box-shadow: 3px 3px 0px var(--color-black);
+}
+
+.auth-card__submit {
+  margin-top: 6px;
+}
+
+.auth-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.auth-error {
+  margin: 0;
+  padding: 10px 12px;
+  background: #FFE1E1;
+  border: 2px solid var(--color-black);
+  border-radius: 8px;
+  color: #B30000;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* Horizontal purple divider */
+.auth-divider {
+  height: 3px;
+  background: var(--color-purple);
+  border-radius: 4px;
+  margin: 6px 0;
+}
+
+.btn--sso {
+  background: #fff;
+  color: var(--color-black);
+  text-shadow: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 16px;
+}
+
+.btn--sso:hover {
+  text-shadow: none;
+}
+
+/* ============================== Browse Page ============================== */
+
+.browse-layout {
+  display: flex;
+  gap: 24px;
+  padding: 32px;
+  max-width: 1100px;
+  margin: 0 auto;
+  align-items: flex-start;
+}
+
+.browse-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: 240px;
+  flex-shrink: 0;
+}
+
+.category-btn {
+  background: #fff;
+  color: var(--color-black);
+  border: var(--border-thick);
+  border-radius: 10px;
+  box-shadow: var(--shadow-hard);
+  padding: 14px 16px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: right;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.category-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--color-black);
+}
+
+/* Active category signified by black background */
+.category-btn.is-active {
+  background: var(--color-active);
+  color: #fff;
+}
+
+.browse-grid {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.course-card {
+  background: #fff;
+  border: var(--border-thick);
+  border-radius: 14px;
+  box-shadow: var(--shadow-hard-lg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.15s ease;
+}
+
+.course-card:hover {
+  transform: translate(-2px, -2px);
+}
+
+.course-card__image {
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  color: #fff;
+  border-bottom: var(--border-thick);
+  background: linear-gradient(135deg, var(--color-purple), var(--shape-circle));
+  background-size: cover;
+  background-position: center;
+}
+
+.course-card__body {
+  padding: 14px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  flex: 1;
+}
+
+.course-card__title {
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.4;
+}
+
+.course-card__footer {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.course-card__time {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #444;
+}
+
+.course-card__tier {
+  border: 2px solid var(--color-black);
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px var(--color-black);
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: 800;
+  background: var(--color-purple);
+  color: #fff;
+}
+
+.course-card__tier.is-pro {
+  background: var(--shape-triangle);
+  color: var(--color-black);
+  text-shadow: none;
+}
+
+/* Completed stories get a green border plus a checkmark badge over the thumbnail */
+.course-card.is-completed {
+  border-color: #1E9E4A;
+  box-shadow: 6px 6px 0px #1E9E4A;
+}
+
+.course-card__image {
+  position: relative;
+}
+
+/* Checkmark toggle: click to mark a story complete; turns green once done */
+.course-card__check-btn {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: #999;
+  border: 2px solid var(--color-black);
+  border-radius: 50%;
+  box-shadow: 2px 2px 0px var(--color-black);
+  font-size: 0.95rem;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.course-card__check-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--color-black);
+}
+
+.course-card__check-btn.is-completed {
+  background: #1E9E4A;
+  color: #fff;
+  cursor: default;
+}
+
+/* Developer-only Edit/Delete controls appended to each card in Developer View */
+.course-card__dev-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.course-card__dev-btn {
+  flex: 1;
+  background: #fff;
+  color: var(--color-black);
+  border: 2px solid var(--color-black);
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px var(--color-black);
+  padding: 6px 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.course-card__dev-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--color-black);
+}
+
+.course-card__dev-btn--danger {
+  background: var(--shape-square);
+  color: #fff;
+}
+
+/* ============================== Developer Studio ============================== */
+
+.studio-layout {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+}
+
+.studio-title {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin-bottom: 20px;
+}
+
+.studio-card {
+  background: #fff;
+  border: var(--border-thick);
+  border-radius: 16px;
+  box-shadow: var(--shadow-hard-lg);
+  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.studio-card__title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-top: 8px;
+}
+
+textarea.field__input {
+  resize: vertical;
+  min-height: 64px;
+}
+
+.studio-scene {
+  border: var(--border-thick);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 16px;
+  background: #FAF9F6;
+}
+
+.studio-scene__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-weight: 800;
+}
+
+.studio-scene__remove {
+  background: var(--shape-square);
+  color: #fff;
+  border: 2px solid var(--color-black);
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px var(--color-black);
+  padding: 4px 10px;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.studio-success {
+  margin: 0;
+  padding: 10px 12px;
+  background: #E1FFEA;
+  border: 2px solid var(--color-black);
+  border-radius: 8px;
+  color: #146C36;
+  font-weight: 700;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+/* ============================== Interactive Typing Game ============================== */
+
+.game-screen {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.game-exit {
+  align-self: flex-start;
+}
+
+.game-progress {
+  font-weight: 700;
+  color: #333;
+}
+
+.game-image {
+  width: 100%;
+  max-width: 500px;
+  height: 220px;
+  border: var(--border-thick);
+  border-radius: 16px;
+  box-shadow: var(--shadow-hard-lg);
+  background-size: cover;
+  background-position: center;
+  background-color: #ddd;
+}
+
+.game-prompt-box {
+  width: 100%;
+  position: relative;
+  background: #fff;
+  border: var(--border-thick);
+  border-radius: 16px;
+  box-shadow: var(--shadow-hard-lg);
+  padding: 24px;
+}
+
+.game-prompt {
+  margin: 0;
+  font-size: 1.6rem;
+  line-height: 1.8;
+  direction: ltr;
+  text-align: left;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-weight: 700;
+  color: #b9b9b9;
+}
+
+.game-prompt .char--correct {
+  color: var(--color-black);
+}
+
+/* The single character the user must type next */
+.game-prompt .char--active {
+  border-bottom: 3px solid #1E293B;
+}
+
+.game-prompt .char--error {
+  color: #fff;
+  background: var(--shape-square);
+  border-radius: 3px;
+}
+
+.game-translation {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #444;
+  text-align: center;
+}
+
+.game-hint {
+  /* Anchored to the prompt box itself (not the viewport) so it tracks the text */
+  position: absolute;
+  top: -0px; /* رفعناه للأعلى قليلاً لتجنب ملامسة الإطار */
+  left: -170px; /* دفعناه إلى اليسار خارج الصندوق تماماً */
+  background: #fff;
+  border: var(--border-thick);
+  border-radius: 10px;
+  box-shadow: var(--shadow-hard);
+  padding: 10px 16px;
+  font-weight: 800;
+  z-index: 5;
+  max-width: 220px;
+}
+
+.game-hint .game-hint__word {
+  color: var(--color-purple);
+  display: block;
+  font-size: 0.8rem;
+}
+
+/* "Next scene" control shown once a scene is fully typed (replaces auto-advance) */
+.game-next {
+  text-align: center;
+}
+
+.game-next__hint {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #666;
+}
+
+/* ============================== Modal ============================== */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+}
+
+.modal-card {
+  background: #fff;
+  border: var(--border-thick);
+  border-radius: 16px;
+  box-shadow: var(--shadow-hard-lg);
+  padding: 32px;
+  text-align: center;
+  max-width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* ============================== Responsive ============================== */
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-wrap: wrap;
+    row-gap: 10px;
+  }
+
+  .browse-layout {
+    flex-direction: column;
+  }
+
+  .browse-sidebar {
+    flex-direction: row;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+
+  .browse-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .shape {
+    display: none;
+  }
+}

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>قصة كيبورد | Qissah Keyboard</title>
+
+  <!-- Google Fonts: Cairo -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome (icons CDN) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ======================= NAVBAR ======================= -->
+  <header class="navbar" id="navbar">
+    <!-- Far right: logo (cropped to hide the transparent padding baked into the source PNG) -->
+    <div class="navbar__logo">
+      <img src="./Assets/Logo.png" alt="شعار قصة كيبورد">
+    </div>
+
+    <!-- Center/right links -->
+    <nav class="navbar__links">
+      <button class="btn btn--nav" id="nav-about">عن قصة كيبورد</button>
+      <button class="btn btn--nav" id="nav-browse">تصفح القصص</button>
+      <button class="btn btn--nav btn--upgrade" id="nav-upgrade" hidden>ترقية</button>
+      <button class="btn btn--nav btn--outline" id="nav-studio" hidden>استوديو القصص</button>
+      <button class="btn btn--nav btn--outline" id="nav-dev-toggle" hidden>معاينة كمستخدم</button>
+    </nav>
+
+    <!-- Far left: auth area -->
+    <div class="navbar__auth">
+      <button class="btn btn--nav" id="nav-auth-guest">التسجيل</button>
+      <div class="navbar__user" id="navbar-user" hidden>
+        <button class="btn btn--nav" id="nav-auth-user"></button>
+        <button class="icon-btn" id="nav-edit-nickname" title="تعديل الاسم المستعار" aria-label="تعديل الاسم المستعار">
+          <i class="fa-solid fa-pen"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ======================= VIEW A: LANDING PAGE ======================= -->
+    <section class="view" id="view-landing">
+      <div class="hero">
+        <!-- Floating 3D neo-brutalist shapes -->
+        <div class="shape shape-circle" aria-hidden="true"></div>
+        <div class="shape shape-square" aria-hidden="true"></div>
+        <div class="shape shape-triangle" aria-hidden="true">
+          <div class="shape-triangle__shadow"></div>
+          <div class="shape-triangle__fill"></div>
+        </div>
+        <div class="shape shape-polygon" aria-hidden="true">
+          <div class="shape-polygon__shadow"></div>
+          <div class="shape-polygon__fill"></div>
+        </div>
+
+        <div class="hero__content">
+          <h1 class="hero__title">اطبع القصة... <br/> وأتقن الإنجليزية!</h1>
+          <p class="hero__subtitle">تعلّم اللغة الإنجليزية بطريقة ممتعة عبر طباعة قصص شيقة ومتنوعة</p>
+          <button class="btn btn--cta" id="hero-cta">ابدأ الآن</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= VIEW B: AUTH / SIGN-IN PAGE ======================= -->
+    <section class="view" id="view-auth" hidden>
+      <div class="auth-wrapper">
+        <form class="auth-card" id="auth-form">
+          <h2 class="auth-card__title" id="auth-title">تسجيل الدخول</h2>
+
+          <label class="field">
+            <span class="field__label">البريد الإلكتروني</span>
+            <input type="email" class="field__input" id="auth-email" placeholder="example@email.com" required>
+          </label>
+
+          <label class="field">
+            <span class="field__label">كلمة المرور</span>
+            <input type="password" class="field__input" id="auth-password" placeholder="••••••••" minlength="6" required>
+          </label>
+
+          <label class="field" id="auth-confirm-field" hidden>
+            <span class="field__label">تأكيد كلمة المرور</span>
+            <input type="password" class="field__input" id="auth-confirm-password" placeholder="••••••••" minlength="6">
+          </label>
+
+          <p class="auth-error" id="auth-error" hidden></p>
+
+          <div class="auth-actions">
+            <button type="submit" class="btn btn--cta" id="auth-signin-btn">تسجيل الدخول</button>
+            <button type="button" class="btn btn--cta btn--outline" id="auth-signup-btn">إنشاء حساب جديد</button>
+          </div>
+
+          <!-- Divider -->
+          <div class="auth-divider" aria-hidden="true"></div>
+
+          <!-- SSO buttons -->
+          <button type="button" class="btn btn--sso" id="sso-google">
+            <i class="fa-brands fa-google"></i>
+            <span id="sso-google-label">الدخول عبر Google</span>
+          </button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ======================= VIEW D: NICKNAME SETUP (ONBOARDING / EDIT) ======================= -->
+    <section class="view" id="view-nickname" hidden>
+      <div class="auth-wrapper">
+        <form class="auth-card" id="nickname-form">
+          <h2 class="auth-card__title">ما هو اسمك المستعار؟</h2>
+
+          <label class="field">
+            <span class="field__label">الاسم المستعار</span>
+            <input type="text" class="field__input" id="nickname-input" placeholder="مثال: Mohammed" required>
+          </label>
+
+          <p class="auth-error" id="nickname-error" hidden></p>
+
+          <div class="auth-actions">
+            <button type="submit" class="btn btn--cta">حفظ</button>
+            <button type="button" class="btn btn--cta btn--outline" id="nickname-cancel" hidden>إلغاء</button>
+            <button type="button" class="btn btn--cta btn--danger" id="nickname-signout" hidden>تسجيل الخروج</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ======================= VIEW C: BROWSE / LEARNING PATH PAGE ======================= -->
+    <section class="view" id="view-browse" hidden>
+      <div class="browse-layout">
+        <!-- Sidebar (right side in RTL) — categories are rendered dynamically from Firestore -->
+        <aside class="browse-sidebar" id="browse-sidebar"></aside>
+
+        <!-- Main content grid (left side in RTL) -->
+        <div class="browse-grid" id="browse-grid">
+          <!-- Course cards are rendered here by app.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= VIEW E: DEVELOPER STORY STUDIO ======================= -->
+    <section class="view" id="view-studio" hidden>
+      <div class="studio-layout">
+        <h2 class="studio-title" id="studio-title-heading">استوديو القصص</h2>
+
+        <form class="studio-card" id="studio-form">
+          <h3 class="studio-card__title">بيانات القصة</h3>
+
+          <label class="field">
+            <span class="field__label">عنوان القصة</span>
+            <input type="text" class="field__input" id="studio-title" placeholder="مثال: أساسيات الأمن السيبراني" required>
+          </label>
+
+          <label class="field">
+            <span class="field__label">التصنيف</span>
+            <select class="field__input" id="studio-category" required></select>
+          </label>
+
+          <label class="field">
+            <span class="field__label">المستوى</span>
+            <select class="field__input" id="studio-tier">
+              <option value="free">مجاني</option>
+              <option value="pro">احترافي</option>
+            </select>
+          </label>
+
+          <label class="field">
+            <span class="field__label">الوقت المتوقع (دقائق)</span>
+            <input type="number" class="field__input" id="studio-minutes" min="1" value="10" required>
+          </label>
+
+          <label class="field">
+            <span class="field__label">رابط صورة الغلاف</span>
+            <input type="url" class="field__input" id="studio-thumbnail" placeholder="https://...">
+          </label>
+
+          <p class="auth-error" id="studio-error" hidden></p>
+
+          <h3 class="studio-card__title">المشاهد</h3>
+          <div id="studio-scenes"></div>
+
+          <button type="button" class="btn btn--outline" id="studio-add-scene">+ إضافة مشهد آخر</button>
+          <button type="submit" class="btn btn--cta">حفظ ونشر القصة</button>
+        </form>
+      </div>
+    </section>
+
+    <!-- ======================= VIEW F: INTERACTIVE TYPING LEVEL ======================= -->
+    <section class="view" id="view-game" hidden>
+      <div class="game-screen">
+        <button class="btn btn--outline game-exit" id="game-exit">← العودة إلى القصص</button>
+
+        <p class="game-progress" id="game-progress"></p>
+
+        <div class="game-image" id="game-image"></div>
+
+        <div class="game-prompt-box">
+          <div class="game-hint" id="game-hint" hidden></div>
+          <p class="game-prompt" id="game-prompt"></p>
+        </div>
+        <p class="game-translation" id="game-translation"></p>
+
+        <div class="game-next" id="game-next" hidden>
+          <button class="btn btn--cta" id="game-next-btn">التالي</button>
+          <p class="game-next__hint">اضغط Enter للمتابعة</p>
+        </div>
+      </div>
+
+      <!-- Completion modal -->
+      <div class="modal-overlay" id="completion-modal" hidden>
+        <div class="modal-card">
+          <h2>أحسنت! لقد أكملت القصة 🎉</h2>
+          <button class="btn btn--cta" id="completion-close-btn">العودة إلى القصص</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
