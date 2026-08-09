@@ -5,7 +5,7 @@
    ===================================================================== */
 
 import { userState, userProgress, categories, stories, appState } from './state.js';
-import { escapeHtml } from './utils.js';
+import { escapeHtml, resolveImage } from './utils.js';
 import { markStoryComplete } from './db.js';
 import { openGame, stopTyping } from './game.js';
 import { editStory, deleteStory } from './studio.js';
@@ -136,7 +136,7 @@ export function renderCourseCards() {
       const isPro = course.tier === 'pro';
       return `
       <article class="course-card ${isCompleted ? 'is-completed' : ''}" data-story-id="${course.id}">
-        <div class="course-card__image" style="background-image: url('${course.thumbnailUrl || ''}')">
+        <div class="course-card__image" style="background-image: url('${resolveImage(course.thumbnailUrl)}')">
           <button
             class="course-card__check-btn ${isCompleted ? 'is-completed' : ''}"
             data-story-id="${course.id}"

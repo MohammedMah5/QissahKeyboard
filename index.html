@@ -193,7 +193,12 @@
 
           <label class="field">
             <span class="field__label">رابط صورة الغلاف</span>
-            <input type="url" class="field__input" id="studio-thumbnail" placeholder="https://...">
+            <input type="text" class="field__input" id="studio-thumbnail" placeholder="assets/image.png">
+          </label>
+
+          <label class="field">
+            <span class="field__label">رابط ملف الصوت</span>
+            <input type="text" class="field__input" id="studio-audio-url" placeholder="assets/narration/story1.mp3">
           </label>
 
           <p class="auth-error" id="studio-error" hidden></p>
@@ -212,8 +217,8 @@
 
           <div id="studio-template-mode" hidden>
             <label class="field">
-              <span class="field__label">الصق نص القالب هنا (بصيغة Scene 1: / -English / -Arabic / -Image / -Words)</span>
-              <textarea class="field__input" id="studio-template-textarea" rows="12" placeholder="Scene 1:&#10;-English: ...&#10;-Arabic: ...&#10;-Image: ...&#10;-Words: word1:trans1, word2:trans2"></textarea>
+              <span class="field__label">الصق نص القالب هنا (بصيغة Scene 1: / -English / -Arabic / -Image / -Words / --- / timestamps)</span>
+              <textarea class="field__input" id="studio-template-textarea" rows="12" placeholder="Scene 1:&#10;-English: ...&#10;-Arabic: ...&#10;-Image: ...&#10;-Words: word1:trans1, word2:trans2&#10;---&#10;0:00 -> 0:10"></textarea>
             </label>
           </div>
 

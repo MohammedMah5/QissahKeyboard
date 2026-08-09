@@ -3,7 +3,7 @@
    ===================================================================== */
 
 import { userState } from './state.js';
-import { escapeHtml } from './utils.js';
+import { escapeHtml, resolveImage } from './utils.js';
 import { markStoryComplete, recordWordsTyped } from './db.js';
 import { showView, renderCourseCards } from './ui.js';
 
@@ -19,6 +19,9 @@ const completionModal = document.getElementById('completion-modal');
 const completionCloseBtn = document.getElementById('completion-close-btn');
 
 const gameState = { story: null, sceneIndex: 0, chars: [], typedIndex: 0, hasError: false, awaitingNext: false, wordsTypedThisStory: 0 };
+
+let narrationAudio = null;
+let narrationListener = null;
 
 let audioCtx = null;
 let keySoundBuffer = null;
@@ -98,6 +101,32 @@ function updateHint() {
   }
 }
 
+function pauseNarration() {
+  if (narrationAudio && !narrationAudio.paused) {
+    narrationAudio.pause();
+  }
+}
+
+function playSceneNarration() {
+  const scene = gameState.story.scenes[gameState.sceneIndex];
+  if (!gameState.story.audioUrl || scene.audioStart == null || scene.audioEnd == null) return;
+
+  if (!narrationAudio) {
+    narrationAudio = new Audio(gameState.story.audioUrl);
+    narrationAudio.preload = 'auto';
+    narrationListener = () => {
+      const currentScene = gameState.story.scenes[gameState.sceneIndex];
+      if (narrationAudio && currentScene.audioEnd != null && narrationAudio.currentTime >= currentScene.audioEnd) {
+        narrationAudio.pause();
+      }
+    };
+    narrationAudio.addEventListener('timeupdate', narrationListener);
+  }
+
+  narrationAudio.currentTime = scene.audioStart;
+  narrationAudio.play().catch(() => {});
+}
+
 function loadScene(index) {
   const scene = gameState.story.scenes[index];
   gameState.sceneIndex = index;
@@ -108,15 +137,17 @@ function loadScene(index) {
   gameNextEl.hidden = true;
   skipAutoNewlines();
 
-  gameImageEl.style.backgroundImage = `url('${scene.image || gameState.story.thumbnailUrl || ''}')`;
+  gameImageEl.style.backgroundImage = `url('${resolveImage(scene.image || gameState.story.thumbnailUrl)}')`;
   gameTranslationEl.textContent = scene.ar || '';
   gameProgressEl.textContent = `المشهد ${index + 1} من ${gameState.story.scenes.length}`;
   renderPrompt();
   updateHint();
+  playSceneNarration();
 }
 
 async function finishStory() {
   document.removeEventListener('keydown', handleTyping);
+  pauseNarration();
   gameHintEl.hidden = true;
   gameNextEl.hidden = true;
   if (userState.uid) {
@@ -134,6 +165,7 @@ async function finishStory() {
 function onSceneComplete() {
   gameState.wordsTypedThisStory += 1; // final word of the scene (no trailing space to count it)
   gameState.awaitingNext = true;
+  pauseNarration();
   gameHintEl.hidden = true;
   gameNextEl.hidden = false;
 }
@@ -218,6 +250,7 @@ export function openGame(story) {
 /** Removes the typing keydown listener; exported so ui.js can call it from any navigation-away path. */
 export function stopTyping() {
   document.removeEventListener('keydown', handleTyping);
+  pauseNarration();
 }
 
 function exitGame() {

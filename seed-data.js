@@ -5,9 +5,8 @@
    ===================================================================== */
 
 export const seedCategories = [
-  { id: 'cybersecurity', name: 'قصص الأمن السبراني', order: 1 },
-  { id: 'entrepreneurship', name: 'قصص ريادة الأعمال', order: 2 },
-  { id: 'cultures', name: 'قصص ثقافات استثنائية', order: 3 },
+  { id: 'entrepreneurship', name: 'قصص ريادة الأعمال', order: 1 },
+  { id: 'cultures', name: 'قصص ثقافات استثنائية', order: 2 },
 ];
 
 function thumb(text, bg = '8C61E6') {
@@ -15,96 +14,6 @@ function thumb(text, bg = '8C61E6') {
 }
 
 export const seedStories = [
-  // ------------------------------- Cybersecurity -------------------------------
-  {
-    id: 'cyber-1',
-    title: 'أساسيات الأمن السيبراني',
-    category: 'cybersecurity',
-    tier: 'free',
-    expectedMinutes: 10,
-    thumbnailUrl: thumb('Cybersecurity Basics'),
-    scenes: [
-      {
-        en: 'Cybersecurity protects your computer.\nIt stops hackers and viruses.',
-        ar: 'الأمن السيبراني يحمي جهاز الكمبيوتر الخاص بك. يوقف القراصنة والفيروسات.',
-        image: thumb('Scene 1'),
-        words: { cybersecurity: 'الأمن السيبراني', protects: 'يحمي', your: 'الخاص بك', computer: 'الكمبيوتر', it: 'هو', stops: 'يوقف', hackers: 'القراصنة', and: 'و', viruses: 'الفيروسات' },
-      },
-      {
-        en: 'Use strong passwords always.\nNever share your secret code.',
-        ar: 'استخدم كلمات مرور قوية دائمًا. لا تشارك رمزك السري أبدًا.',
-        image: thumb('Scene 2'),
-        words: { use: 'استخدم', strong: 'قوية', passwords: 'كلمات مرور', always: 'دائمًا', never: 'أبدًا', share: 'تشارك', your: 'الخاص بك', secret: 'سري', code: 'رمز' },
-      },
-    ],
-  },
-  {
-    id: 'cyber-2',
-    title: 'الهندسة الاجتماعية',
-    category: 'cybersecurity',
-    tier: 'free',
-    expectedMinutes: 12,
-    thumbnailUrl: thumb('Social Engineering'),
-    scenes: [
-      {
-        en: 'Social engineering tricks people.\nAttackers pretend to be trusted.',
-        ar: 'الهندسة الاجتماعية تخدع الناس. يتظاهر المهاجمون بأنهم موثوقون.',
-        image: thumb('Scene 1'),
-        words: { social: 'اجتماعية', engineering: 'هندسة', tricks: 'يخدع', people: 'الناس', attackers: 'المهاجمون', pretend: 'يتظاهرون', to: 'أن', be: 'يكونوا', trusted: 'موثوقين' },
-      },
-      {
-        en: 'Phishing emails look very real.\nCheck the sender before clicking.',
-        ar: 'رسائل التصيد الإلكتروني تبدو حقيقية جدًا. تحقق من المرسل قبل النقر.',
-        image: thumb('Scene 2'),
-        words: { phishing: 'تصيد', emails: 'رسائل', look: 'تبدو', very: 'جدًا', real: 'حقيقية', check: 'تحقق من', the: 'ال', sender: 'المرسل', before: 'قبل', clicking: 'النقر' },
-      },
-    ],
-  },
-  {
-    id: 'cyber-3',
-    title: 'أمن الشبكات',
-    category: 'cybersecurity',
-    tier: 'pro',
-    expectedMinutes: 15,
-    thumbnailUrl: thumb('Network Security'),
-    scenes: [
-      {
-        en: 'Networks connect many devices.\nFirewalls block unwanted traffic.',
-        ar: 'الشبكات تربط العديد من الأجهزة. الجدران النارية تمنع الحركة غير المرغوب فيها.',
-        image: thumb('Scene 1'),
-        words: { networks: 'الشبكات', connect: 'تربط', many: 'العديد من', devices: 'الأجهزة', firewalls: 'الجدران النارية', block: 'تمنع', unwanted: 'غير المرغوب فيها', traffic: 'الحركة' },
-      },
-      {
-        en: 'A VPN hides your location.\nPublic Wi-Fi can be risky.',
-        ar: 'الشبكة الافتراضية الخاصة تخفي موقعك. الواي فاي العام قد يكون خطيرًا.',
-        image: thumb('Scene 2'),
-        words: { a: 'أداة تعريف', vpn: 'شبكة افتراضية خاصة', hides: 'يخفي', your: 'الخاص بك', location: 'موقعك', public: 'عام', 'wi-fi': 'واي فاي', can: 'يمكن', be: 'أن يكون', risky: 'خطيرًا' },
-      },
-    ],
-  },
-  {
-    id: 'cyber-4',
-    title: 'التشفير للمبتدئين',
-    category: 'cybersecurity',
-    tier: 'free',
-    expectedMinutes: 8,
-    thumbnailUrl: thumb('Encryption 101'),
-    scenes: [
-      {
-        en: 'Encryption scrambles your data.\nOnly a key can unlock it.',
-        ar: 'التشفير يخلط بياناتك. فقط المفتاح يمكنه فتحه.',
-        image: thumb('Scene 1'),
-        words: { encryption: 'التشفير', scrambles: 'يخلط', your: 'الخاص بك', data: 'بياناتك', only: 'فقط', a: 'أداة تعريف', key: 'مفتاح', can: 'يمكن', unlock: 'يفتح', it: 'ه' },
-      },
-      {
-        en: 'Websites use HTTPS for safety.\nLook for the lock icon.',
-        ar: 'المواقع تستخدم HTTPS من أجل الأمان. ابحث عن أيقونة القفل.',
-        image: thumb('Scene 2'),
-        words: { websites: 'المواقع', use: 'تستخدم', https: 'إتش تي تي بي إس', for: 'من أجل', safety: 'الأمان', look: 'ابحث', the: 'ال', lock: 'القفل', icon: 'الأيقونة' },
-      },
-    ],
-  },
-
   // ------------------------------- Entrepreneurship -------------------------------
   {
     id: 'biz-1',

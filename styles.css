@@ -699,6 +699,12 @@ textarea.field__input {
   font-weight: 700;
 }
 
+.studio-scene__audio-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
 .studio-success {
   margin: 0;
   padding: 10px 12px;

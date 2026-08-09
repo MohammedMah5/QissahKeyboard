@@ -14,6 +14,7 @@ const studioCategorySelect = document.getElementById('studio-category');
 const studioTierSelect = document.getElementById('studio-tier');
 const studioMinutesInput = document.getElementById('studio-minutes');
 const studioThumbnailInput = document.getElementById('studio-thumbnail');
+const studioAudioUrlInput = document.getElementById('studio-audio-url');
 const studioErrorEl = document.getElementById('studio-error');
 const studioScenesEl = document.getElementById('studio-scenes');
 const studioAddSceneBtn = document.getElementById('studio-add-scene');
@@ -28,7 +29,7 @@ const studioTemplateTextarea = document.getElementById('studio-template-textarea
 let studioInputMode = 'normal'; // 'normal' | 'template'
 
 function emptyScene() {
-  return { en: '', ar: '', image: '', wordsText: '' };
+  return { en: '', ar: '', image: '', wordsText: '', audioStartText: '', audioEndText: '' };
 }
 
 let studioScenes = [emptyScene()];
@@ -53,6 +54,17 @@ studioModeTemplateBtn.addEventListener('click', () => setStudioMode('template'))
 //   -Arabic: ...
 //   -Image: ...
 //   -Words: word1:trans1, word2:trans2
+//   ---
+//   0:00 -> 0:10
+function parseTimeToSeconds(timeStr) {
+  const match = String(timeStr || '').trim().match(/^(\d+):(\d{1,2})$/);
+  if (!match) return null;
+  const minutes = parseInt(match[1], 10);
+  const seconds = parseInt(match[2], 10);
+  if (seconds >= 60) return null;
+  return minutes * 60 + seconds;
+}
+
 function parseTemplateText(text) {
   const blocks = text.split(/Scene\s*\d+\s*:/i).map((block) => block.trim()).filter(Boolean);
 
@@ -63,6 +75,11 @@ function parseTemplateText(text) {
       const image = (block.match(/-Image:\s*([\s\S]*?)(?=\n-|$)/i) || [])[1] || '';
       const wordsLine = (block.match(/-Words:\s*([\s\S]*?)(?=\n-|$)/i) || [])[1] || '';
 
+      // Extract the timestamp line after the --- delimiter
+      const timeMatch = block.match(/---\s*\n\s*(\d+:\d{1,2})\s*->\s*(\d+:\d{1,2})/i);
+      const audioStart = timeMatch ? parseTimeToSeconds(timeMatch[1]) : null;
+      const audioEnd = timeMatch ? parseTimeToSeconds(timeMatch[2]) : null;
+
       const words = {};
       wordsLine.split(',').forEach((pair) => {
         const idx = pair.indexOf(':');
@@ -72,7 +89,7 @@ function parseTemplateText(text) {
         if (word && translation) words[word] = translation;
       });
 
-      return { en: en.trim(), ar: ar.trim(), image: image.trim(), words };
+      return { en: en.trim(), ar: ar.trim(), image: image.trim(), words, audioStart, audioEnd };
     })
     .filter((scene) => scene.en);
 }
@@ -121,12 +138,22 @@ function renderStudioScenes() {
         </label>
         <label class="field">
           <span class="field__label">رابط صورة المشهد</span>
-          <input type="url" class="field__input" data-field="image" data-index="${i}" value="${escapeHtml(scene.image)}" placeholder="https://...">
+          <input type="text" class="field__input" data-field="image" data-index="${i}" value="${escapeHtml(scene.image)}" placeholder="assets/image.png">
         </label>
         <label class="field">
           <span class="field__label">ترجمة الكلمات (كل سطر بصيغة word:ترجمة)</span>
           <textarea class="field__input" data-field="wordsText" data-index="${i}" placeholder="cybersecurity:الأمن السيبراني">${escapeHtml(scene.wordsText)}</textarea>
         </label>
+        <div class="studio-scene__audio-fields">
+          <label class="field">
+            <span class="field__label">بداية الصوت (mm:ss)</span>
+            <input type="text" class="field__input" data-field="audioStartText" data-index="${i}" value="${escapeHtml(scene.audioStartText || '')}" placeholder="0:00">
+          </label>
+          <label class="field">
+            <span class="field__label">نهاية الصوت (mm:ss)</span>
+            <input type="text" class="field__input" data-field="audioEndText" data-index="${i}" value="${escapeHtml(scene.audioEndText || '')}" placeholder="0:10">
+          </label>
+        </div>
       </div>`
     )
     .join('');
@@ -211,6 +238,8 @@ studioForm.addEventListener('submit', async (event) => {
         ar: scene.ar.trim(),
         image: scene.image.trim(),
         words: parseWordsText(scene.wordsText),
+        audioStart: parseTimeToSeconds(scene.audioStartText),
+        audioEnd: parseTimeToSeconds(scene.audioEndText),
       }));
 
   if (scenes.length === 0) {
@@ -224,6 +253,7 @@ studioForm.addEventListener('submit', async (event) => {
     tier: studioTierSelect.value,
     expectedMinutes: Number(studioMinutesInput.value) || 10,
     thumbnailUrl: studioThumbnailInput.value.trim() || scenes[0].image || '',
+    audioUrl: studioAudioUrlInput.value.trim() || '',
     scenes,
   };
 
@@ -255,11 +285,14 @@ export function editStory(storyId) {
   studioTierSelect.value = story.tier;
   studioMinutesInput.value = story.expectedMinutes;
   studioThumbnailInput.value = story.thumbnailUrl || '';
+  studioAudioUrlInput.value = story.audioUrl || '';
   studioScenes = story.scenes.map((scene) => ({
     en: scene.en,
     ar: scene.ar,
     image: scene.image || '',
     wordsText: Object.entries(scene.words || {}).map(([word, translation]) => `${word}:${translation}`).join('\n'),
+    audioStartText: scene.audioStart != null ? `${Math.floor(scene.audioStart / 60)}:${String(scene.audioStart % 60).padStart(2, '0')}` : '',
+    audioEndText: scene.audioEnd != null ? `${Math.floor(scene.audioEnd / 60)}:${String(scene.audioEnd % 60).padStart(2, '0')}` : '',
   }));
   setStudioMode('normal');
   renderStudioScenes();
