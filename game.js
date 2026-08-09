@@ -18,7 +18,15 @@ const gameNextBtn = document.getElementById('game-next-btn');
 const completionModal = document.getElementById('completion-modal');
 const completionCloseBtn = document.getElementById('completion-close-btn');
 
+const gameToggleKeyboardBtn = document.getElementById('game-toggle-keyboard');
+const gameToggleKeyboardIcon = document.getElementById('game-toggle-keyboard-icon');
+const gameToggleNarratorBtn = document.getElementById('game-toggle-narrator');
+const gameToggleNarratorIcon = document.getElementById('game-toggle-narrator-icon');
+
 const gameState = { story: null, sceneIndex: 0, chars: [], typedIndex: 0, hasError: false, awaitingNext: false, wordsTypedThisStory: 0 };
+
+let isKeyboardSoundEnabled = true;
+let isNarratorSoundEnabled = true;
 
 let narrationAudio = null;
 let narrationListener = null;
@@ -46,6 +54,7 @@ async function ensureAudioReady() {
 
 /** Plays a random slice from the keystroke sound sprite with zero-latency (fresh buffer source per call). */
 function playKeySound() {
+  if (!isKeyboardSoundEnabled) return;
   if (!audioCtx || !keySoundBuffer || keySoundSlices.length === 0) return;
   if (audioCtx.state === 'suspended') audioCtx.resume();
   const [startMs, durationMs] = keySoundSlices[Math.floor(Math.random() * keySoundSlices.length)];
@@ -59,6 +68,37 @@ function playKeySound() {
 // as single tokens, so the character index used for the live hint always lines up
 // with the word the user is actually typing instead of skipping ahead past digits.
 const WORD_REGEX = /[A-Za-z0-9]+(?:['.\/-][A-Za-z0-9]+)*/g;
+
+/**
+ * Finds the dictionary phrase (single- or multi-word) at a given character index.
+ * Scans the scene's translation dictionary keys against the text, preferring the
+ * longest match so multi-word phrases like "breakfast cereal" are treated as one
+ * token instead of isolating "breakfast" and "cereal" separately.
+ */
+function getPhraseAt(text, index, words) {
+  if (!words) return getWordAt(text, index);
+
+  // Sort keys by length descending so multi-word phrases are checked first.
+  const keys = Object.keys(words).sort((a, b) => b.length - a.length);
+
+  for (const key of keys) {
+    const lowerKey = key.toLowerCase();
+    const lowerText = text.toLowerCase();
+    let searchFrom = 0;
+    let foundIndex;
+    while ((foundIndex = lowerText.indexOf(lowerKey, searchFrom)) !== -1) {
+      const phraseEnd = foundIndex + key.length;
+      // The character index falls within this phrase's range.
+      if (index >= foundIndex && index < phraseEnd) {
+        return key;
+      }
+      searchFrom = foundIndex + 1;
+    }
+  }
+
+  // No dictionary match — fall back to the single-word regex.
+  return getWordAt(text, index);
+}
 
 /** Finds the word (current or upcoming) at a given character index for the live dictionary hint. */
 function getWordAt(text, index) {
@@ -77,24 +117,49 @@ function skipAutoNewlines() {
 }
 
 function renderPrompt() {
-  gamePromptEl.innerHTML = gameState.chars
-    .map((ch, i) => {
-      if (ch === '\n') return '<br>';
-      let cls = '';
-      if (i < gameState.typedIndex) cls = 'char--correct';
-      else if (i === gameState.typedIndex) cls = gameState.hasError ? 'char--error char--active' : 'char--active';
-      const glyph = ch === ' ' ? '&nbsp;' : escapeHtml(ch);
-      return `<span class="${cls}">${glyph}</span>`;
-    })
-    .join('');
+  let html = '';
+  let currentWord = '';
+
+  for (let i = 0; i < gameState.chars.length; i++) {
+    const ch = gameState.chars[i];
+
+    if (ch === '\n') {
+      if (currentWord) {
+        html += `<span class="word">${currentWord}</span>`;
+        currentWord = '';
+      }
+      html += '<br>';
+      continue;
+    }
+
+    let cls = '';
+    if (i < gameState.typedIndex) cls = 'char--correct';
+    else if (i === gameState.typedIndex) cls = gameState.hasError ? 'char--error char--active' : 'char--active';
+
+    if (ch === ' ') {
+      if (currentWord) {
+        html += `<span class="word">${currentWord}</span>`;
+        currentWord = '';
+      }
+      html += `<span class="${cls}">&nbsp;</span>`;
+    } else {
+      currentWord += `<span class="${cls}">${escapeHtml(ch)}</span>`;
+    }
+  }
+
+  if (currentWord) {
+    html += `<span class="word">${currentWord}</span>`;
+  }
+
+  gamePromptEl.innerHTML = html;
 }
 
 function updateHint() {
   const scene = gameState.story.scenes[gameState.sceneIndex];
-  const word = getWordAt(scene.en, gameState.typedIndex);
-  const translation = word && scene.words && scene.words[word.toLowerCase()];
-  if (word && translation) {
-    gameHintEl.innerHTML = `<span class="game-hint__word">${escapeHtml(word)}</span>${escapeHtml(translation)}`;
+  const phrase = getPhraseAt(scene.en, gameState.typedIndex, scene.words);
+  const translation = phrase && scene.words && scene.words[phrase.toLowerCase()];
+  if (phrase && translation) {
+    gameHintEl.innerHTML = `<span class="game-hint__word">${escapeHtml(phrase)}</span>${escapeHtml(translation)}`;
     gameHintEl.hidden = false;
   } else {
     gameHintEl.hidden = true;
@@ -109,6 +174,7 @@ function pauseNarration() {
 
 function playSceneNarration() {
   const scene = gameState.story.scenes[gameState.sceneIndex];
+  if (!isNarratorSoundEnabled) return;
   if (!gameState.story.audioUrl || scene.audioStart == null || scene.audioEnd == null) return;
 
   if (!narrationAudio) {
@@ -127,6 +193,38 @@ function playSceneNarration() {
   narrationAudio.play().catch(() => {});
 }
 
+function updateToggleButtons() {
+  // Keyboard sound toggle
+  gameToggleKeyboardBtn.classList.toggle('is-muted', !isKeyboardSoundEnabled);
+  gameToggleKeyboardIcon.className = isKeyboardSoundEnabled ? 'fa-solid fa-volume-up' : 'fa-solid fa-volume-mute';
+
+  // Narrator sound toggle
+  gameToggleNarratorBtn.classList.toggle('is-muted', !isNarratorSoundEnabled);
+  gameToggleNarratorIcon.className = isNarratorSoundEnabled ? 'fa-solid fa-volume-up' : 'fa-solid fa-volume-mute';
+}
+
+// Keyboard sound toggle: instantly stop keystroke sounds when muted
+gameToggleKeyboardBtn.addEventListener('click', () => {
+  isKeyboardSoundEnabled = !isKeyboardSoundEnabled;
+  updateToggleButtons();
+});
+
+// Narrator sound toggle: pause when muted; resume from scene start when unmuted
+gameToggleNarratorBtn.addEventListener('click', () => {
+  isNarratorSoundEnabled = !isNarratorSoundEnabled;
+  updateToggleButtons();
+
+  if (isNarratorSoundEnabled) {
+    // If a story is active and this scene has narration, resume from the scene start
+    const scene = gameState.story?.scenes?.[gameState.sceneIndex];
+    if (gameState.story?.audioUrl && scene?.audioStart != null) {
+      playSceneNarration();
+    }
+  } else {
+    pauseNarration();
+  }
+});
+
 function loadScene(index) {
   const scene = gameState.story.scenes[index];
   gameState.sceneIndex = index;
@@ -137,7 +235,9 @@ function loadScene(index) {
   gameNextEl.hidden = true;
   skipAutoNewlines();
 
-  gameImageEl.style.backgroundImage = `url('${resolveImage(scene.image || gameState.story.thumbnailUrl)}')`;
+  // Use the scene's image when present; otherwise fall back to the story's cover image.
+  const imageToRender = (scene.image || '').trim() || gameState.story.thumbnailUrl || '';
+  gameImageEl.style.backgroundImage = `url('${resolveImage(imageToRender)}')`;
   gameTranslationEl.textContent = scene.ar || '';
   gameProgressEl.textContent = `المشهد ${index + 1} من ${gameState.story.scenes.length}`;
   renderPrompt();
@@ -172,6 +272,8 @@ function onSceneComplete() {
 
 function advanceAfterScene() {
   if (!gameState.awaitingNext) return;
+  // Play "next scene" sound effect without blocking the UI transition
+  new Audio('assets/next.mp3').play().catch(() => {});
   gameNextEl.hidden = true;
   gameState.awaitingNext = false;
   if (gameState.sceneIndex < gameState.story.scenes.length - 1) {

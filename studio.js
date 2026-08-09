@@ -52,7 +52,7 @@ studioModeTemplateBtn.addEventListener('click', () => setStudioMode('template'))
 //   Scene 1:
 //   -English: ...
 //   -Arabic: ...
-//   -Image: ...
+//   -Image: ...          ← OPTIONAL — may be omitted or blank
 //   -Words: word1:trans1, word2:trans2
 //   ---
 //   0:00 -> 0:10
@@ -72,7 +72,9 @@ function parseTemplateText(text) {
     .map((block) => {
       const en = (block.match(/-English:\s*([\s\S]*?)(?=\n-|$)/i) || [])[1] || '';
       const ar = (block.match(/-Arabic:\s*([\s\S]*?)(?=\n-|$)/i) || [])[1] || '';
-      const image = (block.match(/-Image:\s*([\s\S]*?)(?=\n-|$)/i) || [])[1] || '';
+      // Image is OPTIONAL: if the -Image line is omitted or blank, save an empty string.
+      const imageMatch = block.match(/-Image:\s*([^\n]*)/i);
+      const image = imageMatch ? imageMatch[1].trim() : '';
       const wordsLine = (block.match(/-Words:\s*([\s\S]*?)(?=\n-|$)/i) || [])[1] || '';
 
       // Extract the timestamp line after the --- delimiter
@@ -89,7 +91,7 @@ function parseTemplateText(text) {
         if (word && translation) words[word] = translation;
       });
 
-      return { en: en.trim(), ar: ar.trim(), image: image.trim(), words, audioStart, audioEnd };
+      return { en: en.trim(), ar: ar.trim(), image, words, audioStart, audioEnd };
     })
     .filter((scene) => scene.en);
 }
@@ -137,12 +139,12 @@ function renderStudioScenes() {
           <textarea class="field__input" data-field="ar" data-index="${i}">${escapeHtml(scene.ar)}</textarea>
         </label>
         <label class="field">
-          <span class="field__label">رابط صورة المشهد</span>
-          <input type="text" class="field__input" data-field="image" data-index="${i}" value="${escapeHtml(scene.image)}" placeholder="assets/image.png">
+          <span class="field__label">رابط صورة المشهد (اختياري)</span>
+          <input type="text" class="field__input" data-field="image" data-index="${i}" value="${escapeHtml(scene.image)}" placeholder="assets/image.png (اختياري)">
         </label>
         <label class="field">
           <span class="field__label">ترجمة الكلمات (كل سطر بصيغة word:ترجمة)</span>
-          <textarea class="field__input" data-field="wordsText" data-index="${i}" placeholder="cybersecurity:الأمن السيبراني">${escapeHtml(scene.wordsText)}</textarea>
+          <textarea class="field__input" data-field="wordsText" data-index="${i}" placeholder="story:قصة">${escapeHtml(scene.wordsText)}</textarea>
         </label>
         <div class="studio-scene__audio-fields">
           <label class="field">

@@ -29,7 +29,7 @@
     <nav class="navbar__links">
       <button class="btn btn--nav" id="nav-about">عن قصة كيبورد</button>
       <button class="btn btn--nav" id="nav-browse">تصفح القصص</button>
-      <button class="btn btn--nav btn--upgrade" id="nav-upgrade" hidden>ترقية</button>
+      <button class="btn btn--nav btn--upgrade" id="nav-upgrade" hidden>افتح جميع القصص!</button>
       <button class="btn btn--nav btn--outline" id="nav-studio" hidden>استوديو القصص</button>
       <button class="btn btn--nav btn--outline" id="nav-dev-toggle" hidden>معاينة كمستخدم</button>
     </nav>
@@ -69,17 +69,69 @@
         </div>
       </div>
 
-      <!-- How-it-works: the core learning loop -->
-      <section class="how-it-works">
-        <h2 class="how-it-works__title">كيف تعمل المنصة؟</h2>
-        <div class="how-it-works__layout">
-          <ol class="how-it-works__steps">
-            <li><span class="how-it-works__num">1</span> اختر التصنيف الذي يناسبك</li>
-            <li><span class="how-it-works__num">2</span> اكتب أحداث القصة كلمة بكلمة</li>
-            <li><span class="how-it-works__num">3</span> شاهد الترجمة الفورية أثناء الكتابة</li>
-            <li><span class="how-it-works__num">4</span> أثرِ رصيدك من المفردات الجديدة</li>
-          </ol>
-          <img src="./Assets/Sample.png" alt="معاينة قصة كيبورد" class="how-it-works__image">
+      <!-- ======================= PAS MARKETING SECTION ======================= -->
+      <section class="pas-section">
+        <!-- Section header -->
+        <div class="pas-header">
+          <h2 class="pas-header__title">لا تحفظ الكلمات.. اطبع القصة وعِش أحداثها!</h2>
+          <p class="pas-header__subtitle">الطريقة الأذكى لتطوير لغتك الإنجليزية، مضاعفة سرعة طباعتك، وتوسيع ثقافتك العامة في وقت واحد.</p>
+        </div>
+
+        <!-- Problem vs. Solution split -->
+        <div class="pas-split">
+          <div class="pas-split__box pas-split__box--problem">
+            <h3 class="pas-split__label">المشكلة</h3>
+            <p class="pas-split__text">الطرق التقليدية مملة. حفظ المفردات المنعزلة لا يصنع طلاقة، والبطء في الكتابة على الكيبورد يهدر وقتك وجهدك.</p>
+          </div>
+          <div class="pas-split__box pas-split__box--solution">
+            <h3 class="pas-split__label">الحل</h3>
+            <p class="pas-split__text">"لوحة مفاتيح قصة" تدمج بين متعة السرد القصصي، تدريب الذاكرة العضلية للطباعة السريعة، واكتساب اللغة في سياق حقيقي وتفاعلي.</p>
+          </div>
+        </div>
+
+        <!-- Interactive typing demo -->
+        <div class="pas-demo">
+          <div class="pas-demo__terminal">
+            <div class="pas-demo__bar">
+              <span class="pas-demo__dot pas-demo__dot--red"></span>
+              <span class="pas-demo__dot pas-demo__dot--yellow"></span>
+              <span class="pas-demo__dot pas-demo__dot--green"></span>
+              <span class="pas-demo__bar-title">Qissah Typing Demo</span>
+            </div>
+            <div class="pas-demo__body">
+              <p class="pas-demo__line">
+                <span class="pas-demo__typed" id="pas-demo-typed"></span><span class="pas-demo__cursor" id="pas-demo-cursor"></span>
+              </p>
+              <div class="pas-demo__tooltip" id="pas-demo-tooltip" hidden>
+                <span class="pas-demo__tooltip-word" id="pas-demo-tooltip-word">walked</span>
+                <span class="pas-demo__tooltip-translation" id="pas-demo-tooltip-translation">مشى</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Features / benefits grid (2x2) -->
+        <div class="pas-features">
+          <div class="pas-feature-card">
+            <div class="pas-feature-card__icon">🚀</div>
+            <h3 class="pas-feature-card__title">طلاقة وسرعة طباعة</h3>
+            <p class="pas-feature-card__text">ابنِ ذاكرة عضلية قوية واكتب بالإنجليزية بسرعة واحترافية دون النظر للوحة المفاتيح.</p>
+          </div>
+          <div class="pas-feature-card">
+            <div class="pas-feature-card__icon">🧠</div>
+            <h3 class="pas-feature-card__title">حصيلة لغوية لا تُنسى</h3>
+            <p class="pas-feature-card__text">ترجمة فورية وتفاعلية للكلمات الصعبة داخل السياق (Contextual Learning) لتثبت المفردات في الذاكرة للأبد.</p>
+          </div>
+          <div class="pas-feature-card">
+            <div class="pas-feature-card__icon">🌍</div>
+            <h3 class="pas-feature-card__title">ثقافة عامة وإلهام</h3>
+            <p class="pas-feature-card__text">تدرب على قصص حقيقية وشيقة في ريادة الأعمال والنجاح، لتكتسب المعرفة وتطور لغتك في آن واحد.</p>
+          </div>
+          <div class="pas-feature-card">
+            <div class="pas-feature-card__icon">🎧</div>
+            <h3 class="pas-feature-card__title">استماع ونطق دقيق</h3>
+            <p class="pas-feature-card__text">استمع للسرد الصوتي الاحترافي مع كل مشهد لربط الكلمة المكتوبة بالنطق الصحيح وتحسين الاستماع.</p>
+          </div>
         </div>
       </section>
     </section>
@@ -170,7 +222,7 @@
 
           <label class="field">
             <span class="field__label">عنوان القصة</span>
-            <input type="text" class="field__input" id="studio-title" placeholder="مثال: أساسيات الأمن السيبراني" required>
+            <input type="text" class="field__input" id="studio-title" placeholder="مثال: رحلة إلى اليابان" required>
           </label>
 
           <label class="field">
@@ -230,7 +282,19 @@
     <!-- ======================= VIEW F: INTERACTIVE TYPING LEVEL ======================= -->
     <section class="view" id="view-game" hidden>
       <div class="game-screen">
-        <button class="btn btn--outline game-exit" id="game-exit">← العودة إلى القصص</button>
+        <div class="game-topbar">
+          <button class="btn btn--outline game-exit" id="game-exit">← العودة إلى القصص</button>
+          <div class="game-audio-controls">
+            <button class="game-audio-btn" id="game-toggle-keyboard" title="صوت الكيبورد">
+              <i class="fa-solid fa-volume-up" id="game-toggle-keyboard-icon"></i>
+              <span>صوت الكيبورد</span>
+            </button>
+            <button class="game-audio-btn" id="game-toggle-narrator" title="صوت الراوي">
+              <i class="fa-solid fa-volume-up" id="game-toggle-narrator-icon"></i>
+              <span>صوت الراوي</span>
+            </button>
+          </div>
+        </div>
 
         <p class="game-progress" id="game-progress"></p>
 
@@ -260,12 +324,12 @@
     <section class="view" id="view-upgrade" hidden>
       <div class="upgrade-wrapper">
         <div class="upgrade-card">
-          <h2 class="upgrade-card__title">الخطة الاحترافية</h2>
-          <p class="upgrade-card__price">10 <span>درهم / شهريًا</span></p>
+          <h2 class="upgrade-card__title">افتح جميع القصص!</h2>
+          <p class="upgrade-card__price">$3 <span>دفعة واحدة مدى الحياة</span></p>
           <ul class="upgrade-card__features">
             <li><i class="fa-solid fa-check"></i> الوصول إلى جميع القصص</li>
           </ul>
-          <button class="btn btn--cta" id="upgrade-checkout-btn">اشترك الآن</button>
+          <a class="btn btn--cta" id="upgrade-checkout-btn" href="YOUR_LEMON_SQUEEZY_CHECKOUT_LINK" target="_blank" rel="noopener noreferrer">افتح جميع القصص</a>
         </div>
       </div>
     </section>
@@ -280,6 +344,57 @@
       <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
     </div>
   </footer>
+
+  <!-- ======================= UPGRADE / LICENSE MODAL ======================= -->
+  <div class="modal-overlay" id="upgrade-modal" hidden>
+    <div class="modal-card upgrade-modal-card">
+
+      <!-- Close button -->
+      <button class="upgrade-modal__close" id="upgrade-modal-close" aria-label="إغلاق">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <!-- ============ PRICING VIEW ============ -->
+      <div id="upgrade-modal-pricing">
+        <h2 class="upgrade-modal__title">افتح جميع القصص!</h2>
+        <p class="upgrade-modal__subtitle">وصول مدى الحياة لجميع القصص والمحتوى الاحترافي</p>
+
+        <div class="upgrade-modal__price">
+          <span class="upgrade-modal__price-currency">$</span>
+          <span class="upgrade-modal__price-value">3</span>
+          <span class="upgrade-modal__price-period">دفعة واحدة مدى الحياة</span>
+        </div>
+
+        <ul class="upgrade-modal__features">
+          <li><i class="fa-solid fa-check"></i> الوصول إلى جميع القصص</li>
+        </ul>
+
+        <a class="btn btn--cta upgrade-modal__checkout" id="checkout-btn" href="YOUR_LEMON_SQUEEZY_CHECKOUT_LINK" target="_blank" rel="noopener noreferrer">
+          افتح جميع القصص
+        </a>
+
+        <button type="button" class="upgrade-modal__link" id="has-key-link">لديك كود تفعيل؟</button>
+      </div>
+
+      <!-- =============== LICENSE ACTIVATION VIEW =============== -->
+      <div id="upgrade-modal-activation" hidden>
+        <h2 class="upgrade-modal__title">تفعيل الرخصة</h2>
+        <p class="upgrade-modal__subtitle">أدخل كود التفعيل الخاص بك</p>
+
+        <label class="field">
+          <span class="field__label">كود التفعيل</span>
+          <input type="text" class="field__input" id="activation-key-input" placeholder="e.g., TEST-KEY-123" autocomplete="off" spellcheck="false">
+        </label>
+
+        <p class="license-status" id="license-status" hidden></p>
+
+        <button type="button" class="btn btn--cta" id="submit-license-btn">تفعيل</button>
+
+        <a type="button" class="upgrade-modal__link" id="back-to-pricing-link">العودة إلى الأسعار</a>
+      </div>
+
+    </div>
+  </div>
 
   <script type="module" src="main.js"></script>
 </body>

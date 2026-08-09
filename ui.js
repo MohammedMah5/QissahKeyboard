@@ -9,6 +9,7 @@ import { escapeHtml, resolveImage } from './utils.js';
 import { markStoryComplete } from './db.js';
 import { openGame, stopTyping } from './game.js';
 import { editStory, deleteStory } from './studio.js';
+import { openUpgradeModal } from './license.js';
 
 // ------------------------- Element references -------------------------
 const views = {
@@ -31,7 +32,6 @@ const navbarUser = document.getElementById('navbar-user');
 const navAuthUser = document.getElementById('nav-auth-user');
 
 const heroCta = document.getElementById('hero-cta');
-const upgradeCheckoutBtn = document.getElementById('upgrade-checkout-btn');
 
 const statsBarEl = document.getElementById('stats-bar');
 const browseSidebarEl = document.getElementById('browse-sidebar');
@@ -208,7 +208,7 @@ navBrowse.addEventListener('click', () => showView('browse'));
 heroCta.addEventListener('click', () => showView('browse'));
 navAuthGuest.addEventListener('click', () => showView('auth'));
 navStudio.addEventListener('click', () => showView('studio'));
-navUpgrade.addEventListener('click', () => showView('upgrade'));
+navUpgrade.addEventListener('click', () => openUpgradeModal());
 
 navDevToggle.addEventListener('click', () => {
   userState.devPreviewAsUser = !userState.devPreviewAsUser;
@@ -216,7 +216,9 @@ navDevToggle.addEventListener('click', () => {
   if (userState.devPreviewAsUser && getCurrentViewName() === 'studio') showView('browse');
 });
 
-// Placeholder checkout — real payment integration would replace this
-upgradeCheckoutBtn.addEventListener('click', () => {
-  console.log('Checkout initiated for Pro Plan (10 AED / month)');
+// When a lifetime license is successfully activated, refresh the navbar
+// (this hides the upgrade button since the user is now Pro).
+document.addEventListener('license-activated', () => {
+  renderNavbar();
 });
+
