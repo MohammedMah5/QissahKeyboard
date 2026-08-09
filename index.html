@@ -68,6 +68,20 @@
           <button class="btn btn--cta" id="hero-cta">ابدأ الآن</button>
         </div>
       </div>
+
+      <!-- How-it-works: the core learning loop -->
+      <section class="how-it-works">
+        <h2 class="how-it-works__title">كيف تعمل المنصة؟</h2>
+        <div class="how-it-works__layout">
+          <ol class="how-it-works__steps">
+            <li><span class="how-it-works__num">1</span> اختر التصنيف الذي يناسبك</li>
+            <li><span class="how-it-works__num">2</span> اكتب أحداث القصة كلمة بكلمة</li>
+            <li><span class="how-it-works__num">3</span> شاهد الترجمة الفورية أثناء الكتابة</li>
+            <li><span class="how-it-works__num">4</span> أثرِ رصيدك من المفردات الجديدة</li>
+          </ol>
+          <img src="./Assets/Sample.png" alt="معاينة قصة كيبورد" class="how-it-works__image">
+        </div>
+      </section>
     </section>
 
     <!-- ======================= VIEW B: AUTH / SIGN-IN PAGE ======================= -->
@@ -134,6 +148,7 @@
 
     <!-- ======================= VIEW C: BROWSE / LEARNING PATH PAGE ======================= -->
     <section class="view" id="view-browse" hidden>
+      <div class="stats-bar" id="stats-bar" hidden></div>
       <div class="browse-layout">
         <!-- Sidebar (right side in RTL) — categories are rendered dynamically from Firestore -->
         <aside class="browse-sidebar" id="browse-sidebar"></aside>
@@ -184,9 +199,24 @@
           <p class="auth-error" id="studio-error" hidden></p>
 
           <h3 class="studio-card__title">المشاهد</h3>
-          <div id="studio-scenes"></div>
 
-          <button type="button" class="btn btn--outline" id="studio-add-scene">+ إضافة مشهد آخر</button>
+          <div class="studio-mode-toggle">
+            <button type="button" class="studio-mode-btn is-active" id="studio-mode-normal">الوضع العادي</button>
+            <button type="button" class="studio-mode-btn" id="studio-mode-template">وضع القالب</button>
+          </div>
+
+          <div id="studio-normal-mode">
+            <div id="studio-scenes"></div>
+            <button type="button" class="btn btn--outline" id="studio-add-scene">+ إضافة مشهد آخر</button>
+          </div>
+
+          <div id="studio-template-mode" hidden>
+            <label class="field">
+              <span class="field__label">الصق نص القالب هنا (بصيغة Scene 1: / -English / -Arabic / -Image / -Words)</span>
+              <textarea class="field__input" id="studio-template-textarea" rows="12" placeholder="Scene 1:&#10;-English: ...&#10;-Arabic: ...&#10;-Image: ...&#10;-Words: word1:trans1, word2:trans2"></textarea>
+            </label>
+          </div>
+
           <button type="submit" class="btn btn--cta">حفظ ونشر القصة</button>
         </form>
       </div>
@@ -221,8 +251,31 @@
         </div>
       </div>
     </section>
+    <!-- ======================= VIEW G: UPGRADE PLAN ======================= -->
+    <section class="view" id="view-upgrade" hidden>
+      <div class="upgrade-wrapper">
+        <div class="upgrade-card">
+          <h2 class="upgrade-card__title">الخطة الاحترافية</h2>
+          <p class="upgrade-card__price">10 <span>درهم / شهريًا</span></p>
+          <ul class="upgrade-card__features">
+            <li><i class="fa-solid fa-check"></i> الوصول إلى جميع القصص</li>
+          </ul>
+          <button class="btn btn--cta" id="upgrade-checkout-btn">اشترك الآن</button>
+        </div>
+      </div>
+    </section>
   </main>
 
-  <script type="module" src="app.js"></script>
+  <!-- ======================= GLOBAL FOOTER ======================= -->
+  <footer class="site-footer">
+    <p class="site-footer__license">رقم الرخصة التجارية: 0000000000</p>
+    <div class="site-footer__socials">
+      <a href="#" aria-label="البريد الإلكتروني"><i class="fa-solid fa-envelope"></i></a>
+      <a href="#" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+      <a href="#" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+    </div>
+  </footer>
+
+  <script type="module" src="main.js"></script>
 </body>
 </html>

@@ -29,6 +29,7 @@ import {
   query,
   where,
   writeBatch,
+  increment,
   serverTimestamp,
 } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
 
@@ -72,5 +73,6 @@ export {
   query,
   where,
   writeBatch,
+  increment,
   serverTimestamp,
 };

@@ -97,9 +97,7 @@ button {
   border-radius: 8px;
 }
 
-.btn--upgrade {
-  background-color: var(--shape-triangle);
-}
+
 
 .btn--outline {
   background: #fff;
@@ -785,7 +783,7 @@ textarea.field__input {
 }
 
 .game-translation {
-  font-size: 1rem;
+  font-size: 1.5rem;
   font-weight: 600;
   color: #444;
   text-align: center;
@@ -874,4 +872,238 @@ textarea.field__input {
   .shape {
     display: none;
   }
+}
+
+/* ============================== How It Works ============================== */
+
+.how-it-works {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+  text-align: center;
+}
+
+.how-it-works__title {
+  font-size: 1.8rem;
+  font-weight: 900;
+  margin-bottom: 32px;
+}
+
+.how-it-works__layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+
+.how-it-works__steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  text-align: right;
+  font-weight: 700;
+  font-size: 1.5rem;
+}
+
+.how-it-works__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  margin-inline-end: 10px;
+  background: var(--color-purple);
+  color: #fff;
+  border: 2px solid var(--color-black);
+  border-radius: 50%;
+  font-size: 0.9rem;
+}
+
+.how-it-works__image {
+  width: 100%;
+  max-width: 400px;
+  border: var(--border-thick);
+  border-radius: 16px;
+  box-shadow: var(--shadow-hard-lg);
+  transform: rotate(-4deg);
+}
+
+/* ============================== Global Footer ============================== */
+
+.site-footer {
+  border-top: var(--border-thick);
+  background: var(--color-bg-end);
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.site-footer__license {
+  margin: 0;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.site-footer__socials {
+  display: flex;
+  gap: 12px;
+}
+
+.site-footer__socials a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  color: var(--color-black);
+  border: 2px solid var(--color-black);
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px var(--color-black);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.site-footer__socials a:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--color-black);
+}
+
+/* ============================== User Stats Bar ============================== */
+
+.stats-bar {
+  max-width: 1100px;
+  margin: 24px auto 0;
+  padding: 0 32px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.stats-bar__item {
+  flex: 1;
+  min-width: 130px;
+  background: #fff;
+  border: var(--border-thick);
+  border-radius: 12px;
+  box-shadow: var(--shadow-hard);
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}
+
+.stats-bar__value {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--color-purple);
+}
+
+.stats-bar__label {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #444;
+}
+
+/* ============================== Upgrade Plan Page ============================== */
+
+.upgrade-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 76px);
+  padding: 40px 20px;
+}
+
+.upgrade-card {
+  width: 100%;
+  max-width: 380px;
+  background: #fff;
+  border: var(--border-thick);
+  border-radius: 16px;
+  box-shadow: var(--shadow-hard-lg);
+  padding: 32px;
+  text-align: center;
+}
+
+.upgrade-card__title {
+  font-size: 1.5rem;
+  font-weight: 900;
+}
+
+.upgrade-card__price {
+  font-size: 2.4rem;
+  font-weight: 900;
+  color: var(--color-purple);
+  margin: 16px 0;
+}
+
+.upgrade-card__price span {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-black);
+}
+
+.upgrade-card__features {
+  list-style: none;
+  margin: 0 0 24px;
+  padding: 0;
+  text-align: right;
+  font-weight: 700;
+}
+
+.upgrade-card__features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+  border-bottom: 2px solid #eee;
+}
+
+.upgrade-card__features i {
+  color: #1E9E4A;
+}
+
+/* ============================== Studio Input Mode Toggle ============================== */
+
+.studio-mode-toggle {
+  display: flex;
+  gap: 10px;
+}
+
+.studio-mode-btn {
+  flex: 1;
+  background: #fff;
+  color: var(--color-black);
+  border: 2px solid var(--color-black);
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px var(--color-black);
+  padding: 10px;
+  font-weight: 700;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, color 0.15s ease;
+}
+
+.studio-mode-btn:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--color-black);
+}
+
+.studio-mode-btn.is-active {
+  background: var(--color-active);
+  color: #fff;
+}
+
+#studio-template-textarea {
+  min-height: 220px;
+  font-family: monospace;
+  direction: ltr;
+  text-align: left;
 }
