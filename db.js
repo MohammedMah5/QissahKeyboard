@@ -28,6 +28,27 @@ async function seedDatabase() {
   await batch.commit();
 }
 
+// One-time self-healing migration: story docs seeded before the asset-path fix
+// still point at the old broken "./Narrations/..." URLs (wrong casing/location).
+// Detect any such stale thumbnail and rewrite every seeded story from the
+// bundled seed data. Only ever runs once (no marker is needed: after the write,
+// no stale paths remain, so the check is a no-op on subsequent loads).
+async function repairStaleSeedPaths(storySnap) {
+  const staleDocs = storySnap.docs.filter((d) => /Narrations\//.test(d.data().thumbnailUrl || ''));
+  if (staleDocs.length === 0) return;
+
+  const batch = writeBatch(db);
+  seedStories.forEach(({ id, ...data }) => batch.set(doc(db, 'stories', id), data));
+  try {
+    await batch.commit();
+    return true;
+  } catch {
+    // Non-admin signed-in user can't write stories — the client-side fallback
+    // in loadCategoriesAndStories keeps the UI working regardless.
+    return false;
+  }
+}
+
 export async function loadCategoriesAndStories() {
   try {
     let [catSnap, storySnap] = await Promise.all([
@@ -41,6 +62,12 @@ export async function loadCategoriesAndStories() {
         getDocs(collection(db, 'categories')),
         getDocs(collection(db, 'stories')),
       ]);
+    } else {
+      // Self-heal stale seeded paths, then re-read so the UI gets fresh data
+      const repaired = await repairStaleSeedPaths(storySnap);
+      if (repaired) {
+        storySnap = await getDocs(collection(db, 'stories'));
+      }
     }
 
     setCategories(

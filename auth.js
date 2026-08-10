@@ -63,6 +63,9 @@ function friendlyAuthError(error) {
     'auth/email-already-in-use': 'هذا البريد الإلكتروني مستخدم بالفعل',
     'auth/weak-password': 'كلمة المرور ضعيفة جدًا (6 أحرف على الأقل)',
     'auth/popup-closed-by-user': 'تم إغلاق نافذة تسجيل الدخول',
+    'auth/unauthorized-domain': 'هذا النطاق غير مصرّح به في Firebase. أضِف localhost في Authentication ← Settings ← Authorized domains.',
+    'auth/operation-not-allowed': 'طريقة تسجيل الدخول هذه غير مفعّلة في لوحة تحكم Firebase.',
+    'auth/popup-blocked': 'المتصفح حظر النافذة المنبثقة. اسمح بالنوافذ المنبثقة وحاول مجددًا.',
   };
   return messages[error.code] || 'حدث خطأ ما، الرجاء المحاولة مرة أخرى';
 }
