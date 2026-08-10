@@ -15,14 +15,14 @@ function thumb(text, bg = '8C61E6') {
   
   // Use local images from Assets/Narrations when possible for reliable loading
   const localImages = {
-    'Build Your Idea': './Assets/Narrations/Enterprenurship/AlbaikStory1/Cover.png',
-    'Digital Marketing': './Assets/Narrations/Enterprenurship/Sooque.com/Cover.png',
-    'Team Management': './Assets/Narrations/Enterprenurship/AlbaikStory1/Cover.png',
-    'Crowdfunding': './Assets/Narrations/Enterprenurship/Talabat/Cover.png',
-    'Asian Cultures': './Assets/Narrations/Culture/Bajau/cover.png',
-    'Amazon Tribes': './Assets/Narrations/Culture/Korowai/Cover.png',
-    'Japanese Traditions': './Assets/Narrations/Culture/Sentinel/Cover.png',
-    'African Civilizations': './Assets/Narrations/Culture/Bajau/cover.png',
+    'Build Your Idea': './Narrations/Enterprenurship/AlbaikStory1/Cover.png',
+    'Digital Marketing': './Narrations/Enterprenurship/Sooque.com/Cover.png',
+    'Team Management': './Narrations/Enterprenurship/AlbaikStory1/Cover.png',
+    'Crowdfunding': './Narrations/Enterprenurship/Talabat/Cover.png',
+    'Asian Cultures': './Narrations/Culture/Bajau/cover.png',
+    'Amazon Tribes': './Narrations/Culture/Korowai/Cover.png',
+    'Japanese Traditions': './Narrations/Culture/Sentinel/Cover.png',
+    'African Civilizations': './Narrations/Culture/Bajau/cover.png',
   };
   if (localImages[text]) return localImages[text];
   return `https://placehold.co/700x400/${bg}/ffffff?text=${encodeURIComponent(text)}`;
