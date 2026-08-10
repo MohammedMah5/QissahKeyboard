@@ -29,7 +29,7 @@ export function resetUserProgress() {
   Object.keys(userProgress).forEach((key) => delete userProgress[key]);
 }
 
-// Categories & stories loaded from Firestore (or the local seed as an offline fallback).
+// Categories & stories loaded from Firestore.
 // Kept as stable array references — mutate contents via splice/push, never reassign.
 export const categories = [];
 export const stories = [];
@@ -44,6 +44,9 @@ export function setStories(list) {
 
 export const appState = {
   activeCategory: null,
+  // Set when the Firestore fetch fails — the UI surfaces this instead of
+  // silently rendering placeholder content.
+  dataError: null,
 };
 
 // ------------------------- Pro status persistence -------------------------

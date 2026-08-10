@@ -92,7 +92,6 @@ firebase deploy --only storage:rules
 ├── utils.js            # Utility functions
 ├── firebase-init.js    # Firebase SDK initialization
 ├── license.js          # Upgrade/license logic
-├── seed-data.js        # Demo data for development
 ├── styles.css          # Global styles
 ├── vite.config.js      # Vite build configuration
 ├── package.json        # Dependencies and scripts

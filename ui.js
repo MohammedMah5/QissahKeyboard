@@ -137,6 +137,12 @@ export function renderSidebar() {
 export function renderCourseCards() {
   renderStatsBar();
 
+  // Surface data-layer failures instead of silently rendering an empty/mocked grid
+  if (appState.dataError) {
+    browseGrid.innerHTML = `<div class="data-error">${escapeHtml(appState.dataError)}</div>`;
+    return;
+  }
+
   const courses = stories.filter((story) => story.category === appState.activeCategory);
   const devControlsOn = userState.isDeveloper && !userState.devPreviewAsUser;
 

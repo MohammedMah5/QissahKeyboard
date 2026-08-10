@@ -671,6 +671,23 @@ button {
   color: #fff;
 }
 
+/* Data-layer failure banner (shown when Firestore fetch fails — replaces the
+   old silent mock-data fallback so errors are visible, never masked) */
+.data-error {
+  grid-column: 1 / -1;
+  margin: 0;
+  padding: 16px 20px;
+  background: #FFE1E1;
+  border: var(--border-thick);
+  border-radius: 12px;
+  box-shadow: var(--shadow-hard);
+  color: #B30000;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-align: center;
+  line-height: 1.7;
+}
+
 /* ============================== Developer Studio ============================== */
 
 .studio-layout {
