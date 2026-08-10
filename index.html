@@ -168,7 +168,9 @@
           <p class="auth-error" id="auth-error" hidden></p>
 
           <label class="consent-checkbox" id="consent-label" hidden>
-            <input type="checkbox" id="auth-consent" required>
+            <!-- required is toggled in JS (toggleAuthMode) — it must NOT be hardcoded
+                 here, or a hidden-but-required checkbox silently blocks login submit -->
+            <input type="checkbox" id="auth-consent">
             <span>أوافق على <a href="terms.html" target="_blank">شروط الخدمة</a> و <a href="privacy.html" target="_blank">سياسة الخصوصية</a></span>
           </label>
 

@@ -231,6 +231,10 @@ function toggleAuthMode() {
   authConfirmField.hidden = !isSignup;
   authConfirmPasswordInput.required = isSignup;
   document.getElementById('consent-label').hidden = !isSignup;
+  // The consent checkbox is only required when visible (sign-up). If it stayed
+  // `required` while hidden in login mode, native form validation would block
+  // submission on an invisible field — making email sign-in fail silently.
+  authConsent.required = isSignup;
 
   authEmailInput.value = '';
   authPasswordInput.value = '';
