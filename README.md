@@ -16,7 +16,8 @@ An interactive web app for learning English through typing stories. Users type E
 - **Frontend:** Native ES modules, no framework
 - **Backend:** Firebase (Auth, Firestore, Storage, Analytics)
 - **Build Tool:** Vite
-- **Hosting:** Firebase Hosting
+- **Hosting:** GitHub Pages
+
 
 ## Prerequisites
 
