@@ -1405,6 +1405,87 @@ textarea.field__input {
     width: 44px;
     height: 44px;
   }
+
+  /* ============ Mobile typing surface (≤768px only) ============ */
+  /* Vertical stack: prompt box sits above the input/keyboard, full width. */
+  .game-mobile-input {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  /* 16px minimum font-size prevents iOS/Android auto-zoom on focus. */
+  .game-mobile-input__field {
+    width: 100%;
+    font-family: 'Cairo', sans-serif;
+    font-size: 16px;
+    padding: 12px 14px;
+    border: var(--border-thick);
+    border-radius: 12px;
+    background: #fff;
+    outline: none;
+    box-sizing: border-box;
+  }
+
+  .game-mobile-input__field:focus {
+    box-shadow: 3px 3px 0px var(--color-black);
+  }
+
+  /* Compact keyboard grid that fits portrait width without overflow. */
+  .game-vkb {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation; /* no double-tap zoom on keys */
+  }
+
+  .game-vkb__row {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+  }
+
+  .game-vkb__key {
+    flex: 1 1 0;
+    min-width: 0;           /* allow keys to shrink to fit narrow rows */
+    max-width: 100%;
+    height: 46px;           /* ≥44px touch target */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+    color: var(--color-black);
+    border: 2px solid var(--color-black);
+    border-radius: 8px;
+    box-shadow: 2px 2px 0px var(--color-black);
+    font-size: 1rem;
+    font-weight: 700;
+    padding: 0;
+    cursor: pointer;
+    transition: transform 0.08s ease, box-shadow 0.08s ease;
+  }
+
+  .game-vkb__key:active {
+    transform: translate(2px, 2px);
+    box-shadow: 0px 0px 0px var(--color-black);
+    background: var(--color-bg-start);
+  }
+
+  .game-vkb__key--wide {
+    flex: 1.6 1 0;
+    font-size: 1.1rem;
+  }
+
+  .game-vkb__key--space {
+    flex: 4 1 0;
+    font-size: 0.85rem;
+  }
 }
 
 /* --- Small phones (≤480px) --- */

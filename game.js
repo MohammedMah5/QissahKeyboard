@@ -23,6 +23,14 @@ const gameToggleKeyboardIcon = document.getElementById('game-toggle-keyboard-ico
 const gameToggleNarratorBtn = document.getElementById('game-toggle-narrator');
 const gameToggleNarratorIcon = document.getElementById('game-toggle-narrator-icon');
 
+// Mobile-only typing surface (hidden on desktop via CSS + [hidden])
+const gameMobileInputEl = document.getElementById('game-mobile-input');
+const gameMobileField = document.getElementById('game-mobile-field');
+const gameVkbEl = document.getElementById('game-vkb');
+
+/** True only on small screens — the virtual keyboard / mobile input never initialize on desktop. */
+const isMobileViewport = () => window.innerWidth <= 768;
+
 const gameState = { story: null, sceneIndex: 0, chars: [], typedIndex: 0, hasError: false, awaitingNext: false, wordsTypedThisStory: 0 };
 
 let isKeyboardSoundEnabled = true;
@@ -301,6 +309,88 @@ function advanceAfterScene() {
 
 gameNextBtn.addEventListener('click', advanceAfterScene);
 
+/* ====================== Mobile typing: virtual keyboard ======================
+   All of this is guarded by isMobileViewport() so desktop mouse/keyboard
+   behaviour is 100% untouched. The physical-keyboard `keydown` path above is
+   the only input on desktop; on mobile we drive the same gameState mutations
+   through an on-screen keyboard and a visible text input (which also summons
+   the native OS keyboard as a fallback). */
+
+const VKB_ROWS = [
+  ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],
+  ['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'],
+  ['z', 'x', 'c', 'v', 'b', 'n', 'm'],
+];
+
+/** Routes a single character through the same logic as a physical keypress. */
+function typeMobileChar(key) {
+  handleTyping({ key, preventDefault: () => {}, ctrlKey: false, metaKey: false, altKey: false });
+}
+
+function buildVirtualKeyboard() {
+  if (gameVkbEl.childElementCount > 0) return; // build once
+
+  const makeKey = (label, value, extraClass = '') => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = `game-vkb__key ${extraClass}`.trim();
+    btn.textContent = label;
+    btn.dataset.key = value;
+    // pointerdown (not click) so the input keeps focus and there's no 300ms tap delay
+    btn.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      typeMobileChar(value);
+    });
+    return btn;
+  };
+
+  VKB_ROWS.forEach((row) => {
+    const rowEl = document.createElement('div');
+    rowEl.className = 'game-vkb__row';
+    row.forEach((k) => rowEl.appendChild(makeKey(k, k)));
+    gameVkbEl.appendChild(rowEl);
+  });
+
+  // Bottom utility row: backspace, space, enter
+  const utilRow = document.createElement('div');
+  utilRow.className = 'game-vkb__row';
+  utilRow.appendChild(makeKey('⌫', 'Backspace', 'game-vkb__key--wide'));
+  utilRow.appendChild(makeKey('مسافة', ' ', 'game-vkb__key--space'));
+  utilRow.appendChild(makeKey('⏎', 'Enter', 'game-vkb__key--wide'));
+  gameVkbEl.appendChild(utilRow);
+}
+
+/** Enables the mobile typing surface: focuses the input (OS keyboard) + shows the vkb. */
+function initMobileTyping() {
+  gameMobileInputEl.hidden = false;
+  buildVirtualKeyboard();
+}
+
+/** Tears down the mobile typing surface when leaving the game or moving to desktop. */
+function teardownMobileTyping() {
+  gameMobileInputEl.hidden = true;
+  if (document.activeElement === gameMobileField) gameMobileField.blur();
+}
+
+// The visible input lets users fall back to the native OS keyboard. We only
+// read single-character edits; the field itself is kept blank so it stays clean.
+gameMobileField.addEventListener('input', (event) => {
+  if (!isMobileViewport()) return;
+  const data = event.data;
+  if (data && data.length === 1) typeMobileChar(data);
+  else if (event.inputType === 'deleteContentBackward') typeMobileChar('Backspace');
+  gameMobileField.value = ''; // reset so the next keystroke is read fresh
+});
+
+gameMobileField.addEventListener('keydown', (event) => {
+  if (!isMobileViewport()) return;
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    typeMobileChar('Enter');
+    gameMobileField.value = '';
+  }
+});
+
 function handleTyping(event) {
   // Scene finished: only Enter (to advance) does anything until the next scene loads
   if (gameState.awaitingNext) {
@@ -363,11 +453,14 @@ export function openGame(story) {
   ensureAudioReady();
   loadScene(0);
   document.addEventListener('keydown', handleTyping);
+  // Mobile-only: reveal the touch typing surface (no-op on desktop)
+  if (isMobileViewport()) initMobileTyping();
 }
 
 /** Removes the typing keydown listener; exported so ui.js can call it from any navigation-away path. */
 export function stopTyping() {
   document.removeEventListener('keydown', handleTyping);
+  teardownMobileTyping();
   pauseNarration();
 }
 
@@ -382,3 +475,19 @@ completionCloseBtn.addEventListener('click', () => {
   completionModal.hidden = true;
   exitGame();
 });
+
+// Viewport guard: if the game is open and the user crosses the 768px boundary
+// (e.g. rotating a tablet, resizing a desktop window), swap input modes so the
+// virtual keyboard never appears on desktop and mobile never loses its input.
+window.addEventListener('resize', () => {
+  if (views_game_is_open()) {
+    if (isMobileViewport()) initMobileTyping();
+    else teardownMobileTyping();
+  }
+});
+
+/** True while the game view is the visible section. */
+function views_game_is_open() {
+  const gameView = document.getElementById('view-game');
+  return gameView && !gameView.hidden;
+}

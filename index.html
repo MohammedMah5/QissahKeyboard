@@ -321,6 +321,23 @@
         </div>
         <p class="game-translation" id="game-translation"></p>
 
+        <!-- Mobile-only typing surface: a visible input (opens the native OS keyboard)
+             plus an on-screen virtual keyboard. Hidden entirely on desktop (>768px). -->
+        <div class="game-mobile-input" id="game-mobile-input" hidden>
+          <input
+            type="text"
+            class="game-mobile-input__field"
+            id="game-mobile-field"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            placeholder="اضغط هنا وابدأ الطباعة..."
+            aria-label="حقل الطباعة"
+          >
+          <div class="game-vkb" id="game-vkb" dir="ltr" aria-label="لوحة مفاتيح افتراضية"></div>
+        </div>
+
         <div class="game-next" id="game-next" hidden>
           <button class="btn btn--cta" id="game-next-btn">التالي</button>
           <p class="game-next__hint">اضغط Enter للمتابعة</p>
