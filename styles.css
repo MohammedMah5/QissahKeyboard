@@ -35,6 +35,14 @@ html, body {
   padding: 0;
   direction: rtl;
   font-family: 'Cairo', sans-serif;
+  /* Belt-and-braces guard: no component may ever force horizontal scrolling */
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Media elements never exceed their container */
+img, video {
+  max-width: 100%;
 }
 
 body {
@@ -1100,43 +1108,311 @@ textarea.field__input {
   color: #B30000;
 }
 
+/* ============================== Touch & Keyboard Feedback ==============================
+   Several components only define :hover effects, which either never fire or
+   "stick" after a tap on touchscreens. These :active mirrors give instant
+   press feedback on tap, and :focus-visible gives keyboard users a clear ring. */
+
+.category-btn:active,
+.course-card__check-btn:active,
+.course-card__dev-btn:active,
+.game-audio-btn:active,
+.site-footer__socials a:active,
+.studio-mode-btn:active,
+.legal-back:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px var(--color-black);
+}
+
+/* Card press feedback (no shadow to collapse — just settle back to resting position) */
+.course-card:active {
+  transform: translate(0, 0);
+}
+
+.pas-feature-card:active {
+  transform: none;
+  box-shadow: var(--shadow-hard-lg);
+}
+
+/* Keyboard-focus ring for every interactive element */
+.btn:focus-visible,
+.icon-btn:focus-visible,
+.category-btn:focus-visible,
+.course-card:focus-visible,
+.course-card__check-btn:focus-visible,
+.course-card__dev-btn:focus-visible,
+.game-audio-btn:focus-visible,
+.studio-mode-btn:focus-visible,
+.upgrade-modal__close:focus-visible,
+.legal-back:focus-visible,
+.site-footer__socials a:focus-visible {
+  outline: 3px solid var(--color-purple);
+  outline-offset: 2px;
+}
+
 /* ============================== Responsive ============================== */
 
+/* --- Tablets & phones (≤768px) --- */
 @media (max-width: 768px) {
+  /* -- Navbar: logo + auth on the first row, links wrap to a full-width row -- */
   .navbar {
     flex-wrap: wrap;
     row-gap: 10px;
+    gap: 10px;
+    padding: 6px 12px;
   }
 
-  .browse-layout {
-    flex-direction: column;
+  .navbar__logo {
+    height: 48px;
+    width: 74px;
   }
 
-  .browse-sidebar {
-    flex-direction: row;
+  .navbar__links {
+    order: 3;
     width: 100%;
-    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
   }
 
-  .browse-grid {
-    grid-template-columns: 1fr;
+  .btn--nav {
+    height: 44px; /* WCAG minimum tap target */
+    padding: 0 12px;
+    font-size: 0.85rem;
+  }
+
+  .icon-btn {
+    height: 44px;
+    width: 44px;
+  }
+
+  /* -- Hero -- */
+  .hero {
+    padding: 40px 16px;
+    min-height: calc(100svh - 76px); /* svh accounts for mobile browser chrome */
+  }
+
+  .hero__subtitle {
+    font-size: 1rem;
   }
 
   .shape {
     display: none;
   }
 
-  /* PAS section: stack split boxes and features into a single column */
+  /* -- PAS marketing section -- */
+  .pas-section {
+    padding: 32px 16px 60px;
+  }
+
+  .pas-header {
+    margin-bottom: 28px;
+  }
+
+  .pas-header__subtitle {
+    font-size: 1rem;
+  }
+
   .pas-split {
     grid-template-columns: 1fr;
+  }
+
+  .pas-split__box,
+  .pas-feature-card {
+    padding: 18px;
+  }
+
+  .pas-demo__body {
+    padding: 16px;
+  }
+
+  /* Demo line must wrap instead of overflowing narrow screens */
+  .pas-demo__line {
+    font-size: 1.05rem;
+    white-space: pre-wrap;
+    overflow-wrap: break-word;
+  }
+
+  .pas-demo__tooltip {
+    left: 20px;
+    max-width: calc(100vw - 64px);
+  }
+
+  .pas-demo__tooltip-translation {
+    font-size: 1.2rem;
   }
 
   .pas-features {
     grid-template-columns: 1fr;
   }
 
-  .pas-demo__tooltip {
-    left: 20px;
+  /* -- Auth / nickname / upgrade cards -- */
+  .auth-wrapper,
+  .upgrade-wrapper {
+    padding: 24px 16px;
+  }
+
+  .auth-card,
+  .upgrade-card {
+    padding: 22px 18px;
+  }
+
+  .consent-checkbox input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+  }
+
+  /* -- Browse page -- */
+  .stats-bar {
+    padding: 0 16px;
+    margin-top: 16px;
+  }
+
+  .browse-layout {
+    flex-direction: column;
+    padding: 20px 16px;
+    gap: 16px;
+  }
+
+  .browse-sidebar {
+    flex-direction: row;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .browse-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* -- Studio -- */
+  .studio-layout {
+    padding: 20px 16px 48px;
+  }
+
+  .studio-card {
+    padding: 20px 16px;
+  }
+
+  .studio-scene {
+    padding: 12px;
+  }
+
+  .studio-scene__audio-fields {
+    grid-template-columns: 1fr;
+  }
+
+  /* -- Typing game -- */
+  .game-screen {
+    padding: 16px 12px 60px;
+  }
+
+  .game-topbar {
+    justify-content: center;
+  }
+
+  .game-image {
+    height: 170px;
+  }
+
+  .game-prompt-box {
+    padding: 16px;
+    min-height: 7rem;
+  }
+
+  .game-prompt {
+    font-size: clamp(1.05rem, 4.5vw, 1.3rem);
+    line-height: 1.7;
+  }
+
+  .game-translation {
+    font-size: clamp(1.05rem, 4.5vw, 1.25rem);
+  }
+
+  /* Hint repositions INSIDE the prompt box — on desktop it hangs 190px outside
+     the right edge, which would overflow the viewport on any phone. */
+  .game-hint {
+    right: 8px;
+    bottom: 8px;
+    max-width: calc(100% - 32px);
+  }
+
+  /* -- Modals -- */
+  .modal-overlay {
+    padding: 16px;
+  }
+
+  .modal-card {
+    width: 100%;
+    padding: 22px 18px;
+  }
+
+  .upgrade-modal__price-value {
+    font-size: 2.6rem;
+  }
+
+  /* -- Legal pages -- */
+  .legal-page {
+    padding: 24px 16px;
+  }
+
+  .legal-card {
+    padding: 22px 18px;
+  }
+
+  /* -- Footer -- */
+  .site-footer {
+    padding: 16px;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* -- Minimum 44px tap targets for every small interactive element -- */
+  .btn,
+  .category-btn,
+  .game-audio-btn,
+  .studio-mode-btn,
+  .studio-scene__remove,
+  .course-card__dev-btn,
+  .legal-back {
+    min-height: 44px;
+  }
+
+  .course-card__check-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .upgrade-modal__close,
+  .site-footer__socials a {
+    width: 44px;
+    height: 44px;
+  }
+}
+
+/* --- Small phones (≤480px) --- */
+@media (max-width: 480px) {
+  .btn--nav {
+    padding: 0 8px;
+    font-size: 0.8rem;
+  }
+
+  .btn--cta {
+    padding: 12px 22px;
+    font-size: 1rem;
+  }
+
+  .game-audio-btn span {
+    /* Icon-only audio toggles save a full row of topbar width */
+    display: none;
+  }
+
+  .game-audio-btn {
+    padding: 8px 12px;
+  }
+
+  .course-card__image {
+    height: 110px;
   }
 }
 
