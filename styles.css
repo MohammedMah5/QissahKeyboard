@@ -422,6 +422,36 @@ button {
   margin: 6px 0;
 }
 
+/* Consent checkbox */
+.consent-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: #94A3B8;
+  background: #0F172A;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: var(--border-thick);
+}
+
+.consent-checkbox input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  accent-color: #10B981;
+  cursor: pointer;
+}
+
+.consent-checkbox a {
+  color: #10B981;
+  text-decoration: underline;
+  font-weight: 700;
+}
+
+.consent-checkbox a:hover {
+  color: #34D399;
+}
+
 .btn--sso {
   background: #fff;
   color: var(--color-black);
@@ -1520,4 +1550,76 @@ textarea.field__input {
   font-family: monospace;
   direction: ltr;
   text-align: left;
+}
+
+/* ============================== Legal Pages ============================== */
+
+.legal-page {
+  min-height: calc(100vh - 76px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  background: #0F172A;
+  color: #E2E8F0;
+}
+
+.legal-card {
+  width: 100%;
+  max-width: 700px;
+  background: #1E293B;
+  border: var(--border-thick);
+  border-radius: 16px;
+  box-shadow: var(--shadow-hard-lg);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.legal-card h1 {
+  color: #F1F5F9;
+  font-size: 1.8rem;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 6px;
+}
+
+.legal-body h2 {
+  color: #10B981;
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-top: 12px;
+  margin-bottom: 6px;
+}
+
+.legal-body p {
+  color: #94A3B8;
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.legal-back {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #10B981;
+  color: #0F172A;
+  border: 2px solid var(--color-black);
+  border-radius: 10px;
+  box-shadow: var(--shadow-hard);
+  padding: 12px 20px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-decoration: none;
+  text-align: center;
+  margin-top: 12px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.legal-back:hover {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0px var(--color-black);
+  color: #0F172A;
 }

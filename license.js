@@ -30,7 +30,7 @@ export async function directUpgrade() {
     document.dispatchEvent(new CustomEvent('license-activated'));
     return { success: true, message: 'تم الترقية بنجاح!' };
   } catch (error) {
-    console.error('Upgrade failed');
+    // Error handled silently in production
     return { success: false, message: 'فشلت الترقية. حاول مرة أخرى.' };
   }
 }

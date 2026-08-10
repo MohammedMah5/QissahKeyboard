@@ -48,7 +48,7 @@ async function ensureAudioReady() {
     keySoundBuffer = await audioCtx.decodeAudioData(arrayBuffer);
     keySoundSlices = Object.values(config.defines || {});
   } catch (error) {
-    console.error('Audio load failed');
+    // Audio load failed — handled silently
   }
 }
 
@@ -270,7 +270,7 @@ async function finishStory() {
       await markStoryComplete(gameState.story.id);
       await recordWordsTyped(userState.uid, gameState.wordsTypedThisStory);
     } catch (error) {
-      console.error('Save failed');
+      // Save failed — handled silently
     }
   }
   completionModal.hidden = false;

@@ -3,11 +3,11 @@
    as native ES modules, so no bundler/build step is required.
    ===================================================================== */
 
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js';
+import { initializeApp } from 'firebase/app';
 import {
   getAnalytics,
   isSupported as isAnalyticsSupported,
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics.js';
+} from 'firebase/analytics';
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -16,7 +16,7 @@ import {
   signInWithPopup,
   onAuthStateChanged,
   signOut,
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js';
+} from 'firebase/auth';
 import {
   getFirestore,
   doc,
@@ -31,31 +31,50 @@ import {
   writeBatch,
   increment,
   serverTimestamp,
-} from 'https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js';
+} from 'firebase/firestore';
 
-// Public client config (safe to expose — access is controlled by Firestore/Auth rules)
+// Load config from environment variables with safe fallbacks
 const firebaseConfig = {
-  apiKey: 'AIzaSyBMqqz5n50sXLRfGUgDnqX0pRZpGzNLrsI',
-  authDomain: 'qissahkeyboard.firebaseapp.com',
-  projectId: 'qissahkeyboard',
-  storageBucket: 'qissahkeyboard.firebasestorage.app',
-  messagingSenderId: '634088692961',
-  appId: '1:634088692961:web:e3d82cff0bc9e81261aba0',
-  measurementId: 'G-XJDVV6SL2D',
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_FIREBASE_APP_ID,
+  measurementId: import.meta.env.VITE_FIREBASE_MEASUREMENT_ID,
 };
 
-export const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
-export const db = getFirestore(app);
-export const googleProvider = new GoogleAuthProvider();
+// Validate required config
+const requiredFields = ['apiKey', 'authDomain', 'projectId', 'storageBucket', 'messagingSenderId', 'appId'];
+const missingFields = requiredFields.filter(field => !firebaseConfig[field]);
+
+let app, auth, db, googleProvider;
+
+if (missingFields.length > 0) {
+  console.error('Missing required Firebase configuration:', missingFields.join(', '));
+  console.error('Please check your .env file and ensure all VITE_FIREBASE_* variables are set.');
+  app = null;
+  auth = null;
+  db = null;
+  googleProvider = null;
+} else {
+  app = initializeApp(firebaseConfig);
+  auth = getAuth(app);
+  db = getFirestore(app);
+  googleProvider = new GoogleAuthProvider();
+}
+
+export { app, auth, db, googleProvider };
 
 // Analytics requires a real https/localhost origin, so probe support first
 // (it would otherwise throw when the app is opened via file:// during local dev).
-isAnalyticsSupported()
-  .then((supported) => {
-    if (supported) getAnalytics(app);
-  })
-  .catch(() => {});
+if (app) {
+  isAnalyticsSupported()
+    .then((supported) => {
+      if (supported) getAnalytics(app);
+    })
+    .catch(() => {});
+}
 
 export {
   createUserWithEmailAndPassword,

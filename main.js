@@ -147,9 +147,11 @@ loadCategoriesAndStories().then(() => {
   renderCourseCards();
 });
 
-// Expose state/utilities for quick manual testing from the browser console
-window.userState = userState;
-window.render = render;
-window.markStoryComplete = markStoryComplete;
-window.checkStoryProgress = checkStoryProgress;
-window.qissahSignOut = () => signOut(auth);
+// Global error handlers
+window.addEventListener('unhandledrejection', (event) => {
+  console.error('Unhandled promise rejection:', event.reason);
+});
+
+window.addEventListener('error', (event) => {
+  console.error('Global error:', event.error);
+});

@@ -166,6 +166,11 @@
 
           <p class="auth-error" id="auth-error" hidden></p>
 
+          <label class="consent-checkbox" id="consent-label" hidden>
+            <input type="checkbox" id="auth-consent" required>
+            <span>أوافق على <a href="terms.html" target="_blank">شروط الخدمة</a> و <a href="privacy.html" target="_blank">سياسة الخصوصية</a></span>
+          </label>
+
           <div class="auth-actions">
             <button type="submit" class="btn btn--cta" id="auth-signin-btn">تسجيل الدخول</button>
             <button type="button" class="btn btn--cta btn--outline" id="auth-signup-btn">إنشاء حساب جديد</button>
@@ -399,5 +404,13 @@
   </div>
 
   <script type="module" src="main.js"></script>
+  <script>
+    // Fallback error display if the app fails to load (e.g., opened via file://)
+    window.addEventListener('error', function(e) {
+      if (e.message && e.message.includes('firebase')) {
+        document.body.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;min-height:100vh;background:#0F172A;color:#E2E8F0;font-family:Cairo,sans-serif;padding:20px;text-align:center;"><div><h1>خطأ في التحميل</h1><p>يجب تشغيل التطبيق عبر خادم التطوير المحلي.</p><p>استخدم:<br><code style="background:#1E293B;padding:8px 12px;border-radius:8px;display:inline-block;margin-top:8px;">npm run dev</code></p><p style="color:#94A3B8;font-size:0.9rem;margin-top:12px;">لا تفتح الملف مباشرة في المتصفح.</p></div></div>';
+      }
+    }, true);
+  </script>
 </body>
 </html>

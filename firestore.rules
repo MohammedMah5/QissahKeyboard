@@ -1,0 +1,68 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // --- Helper functions ---
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Safely fetches the user's role, defaulting to 'user' if the field doesn't exist
+    function isAdmin() {
+      return isAuthenticated() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+
+    // Safely fetches Pro status, defaulting to false if the field doesn't exist
+    function isProUser() {
+      return isAuthenticated() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isPro == true;
+    }
+
+    // --- Categories ---
+    match /categories/{categoryId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // --- Stories ---
+    match /stories/{storyId} {
+      // Allow everyone to read so the UI can successfully render the lists and lock icons.
+      // (Your client-side code will handle blocking access to the actual content).
+      allow read: if true; 
+      allow write: if isAdmin();
+    }
+
+    // --- User profiles ---
+    match /users/{userId} {
+      allow read: if isOwner(userId) || isAdmin();
+      
+      // Safely check fields during creation
+      allow create: if isOwner(userId)
+        && (!('role' in request.resource.data) || request.resource.data.role != 'admin')
+        && (!('isPro' in request.resource.data) || request.resource.data.isPro == false);
+      
+      // Safely check fields during update. Users can update their stats, 
+      // but cannot change their own role or Pro status.
+      allow update: if isAdmin() || (
+        isOwner(userId)
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.isPro == resource.data.isPro
+      );
+      
+      allow delete: if isAdmin();
+    }
+
+    // --- User progress subcollection ---
+    match /users/{userId}/progress/{storyId} {
+      allow read, write: if isOwner(userId);
+    }
+
+    // Reject all other requests by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

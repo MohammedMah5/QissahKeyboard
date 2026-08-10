@@ -5,6 +5,7 @@
 
 import {
   auth,
+  db,
   googleProvider,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -26,8 +27,21 @@ const authConfirmPasswordInput = document.getElementById('auth-confirm-password'
 const authErrorEl = document.getElementById('auth-error');
 const authSignInBtn = document.getElementById('auth-signin-btn');
 const authSignUpBtn = document.getElementById('auth-signup-btn');
+const authConsent = document.getElementById('auth-consent');
 const ssoGoogle = document.getElementById('sso-google');
 const ssoGoogleLabel = document.getElementById('sso-google-label');
+
+// Guard: if Firebase failed to initialize, disable auth and show error
+if (!auth || !db) {
+  console.error('Firebase is not initialized. Check your .env file.');
+  if (authErrorEl) {
+    authErrorEl.textContent = 'خطأ في تحميل التطبيق. تأكد من تشغيل خادم التطوير وتهيئة ملف .env';
+    authErrorEl.hidden = false;
+  }
+  if (authSignInBtn) authSignInBtn.disabled = true;
+  if (authSignUpBtn) authSignUpBtn.disabled = true;
+  if (ssoGoogle) ssoGoogle.disabled = true;
+}
 
 const nicknameForm = document.getElementById('nickname-form');
 const nicknameInput = document.getElementById('nickname-input');
@@ -184,13 +198,15 @@ function handleSignedOut() {
   render();
 }
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    ensureUserProfile(user).catch(() => {});
-  } else {
-    handleSignedOut();
-  }
-});
+if (auth) {
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      ensureUserProfile(user).catch(() => {});
+    } else {
+      handleSignedOut();
+    }
+  });
+}
 
 // ------------------------- Auth modal: Login / Sign Up toggle -------------------------
 let authMode = 'login';
@@ -206,6 +222,7 @@ function toggleAuthMode() {
 
   authConfirmField.hidden = !isSignup;
   authConfirmPasswordInput.required = isSignup;
+  document.getElementById('consent-label').hidden = !isSignup;
 
   authEmailInput.value = '';
   authPasswordInput.value = '';
@@ -220,9 +237,18 @@ authForm.addEventListener('submit', async (event) => {
   event.preventDefault();
   clearAuthError();
 
+  if (!auth) {
+    showAuthError('خطأ في تحميل التطبيق. تأكد من تهيئة ملف .env');
+    return;
+  }
+
   if (authMode === 'signup') {
     if (authPasswordInput.value !== authConfirmPasswordInput.value) {
       showAuthError('كلمة المرور وتأكيدها غير متطابقين');
+      return;
+    }
+    if (!authConsent.checked) {
+      showAuthError('يرجى الموافقة على شروط الخدمة وسياسة الخصوصية للمتابعة.');
       return;
     }
     try {
@@ -243,6 +269,10 @@ authForm.addEventListener('submit', async (event) => {
 // Google sign-in
 ssoGoogle.addEventListener('click', async () => {
   clearAuthError();
+  if (!auth) {
+    showAuthError('خطأ في تحميل التطبيق. تأكد من تهيئة ملف .env');
+    return;
+  }
   try {
     await signInWithPopup(auth, googleProvider);
   } catch (error) {

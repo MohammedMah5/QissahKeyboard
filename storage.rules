@@ -1,0 +1,30 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+
+    // Public assets (narration audio, images): publicly readable
+    match /assets/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // User uploads: users can upload to their own folder only
+    match /users/{userId}/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Reject all other requests
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
