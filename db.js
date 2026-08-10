@@ -49,7 +49,6 @@ export async function loadCategoriesAndStories() {
     setStories(storySnap.docs.map((d) => ({ id: d.id, ...d.data() })));
   } catch (error) {
     // Fallback initialization: Firestore unreachable or rules blocked the read/seed
-    console.error('Using local seed data — Firestore categories/stories unavailable:', error);
     setCategories(seedCategories);
     setStories(seedStories);
   }
@@ -80,8 +79,31 @@ export function userDocRef(uid) {
   return doc(db, 'users', uid);
 }
 
+/**
+ * Ensures a user document has the full default schema for a subscription model:
+ * `isPro` (boolean, default false) and `role` (string, default 'free').
+ * Only writes the fields that are missing — existing values are never clobbered.
+ */
+export async function ensureUserDefaults(uid, data) {
+  const updates = {};
+  if (data?.isPro === undefined) updates.isPro = false;
+  if (!data?.role) updates.role = 'free';
+  if (Object.keys(updates).length > 0) {
+    await setDoc(doc(db, 'users', uid), updates, { merge: true });
+  }
+}
+
+/**
+ * Persists the user's chosen nickname (signup/onboarding or edit flow).
+ * Seeds the full default schema from the start: `isPro: false` + `role: 'free'`,
+ * so every newly-created user document is immediately queryable for the Pro gate.
+ */
 export async function saveNickname(uid, nickname) {
-  await setDoc(userDocRef(uid), { nickname, updatedAt: serverTimestamp() }, { merge: true });
+  await setDoc(
+    userDocRef(uid),
+    { nickname, isPro: false, role: 'free', updatedAt: serverTimestamp() },
+    { merge: true }
+  );
 }
 
 /** Reads today's/yesterday's login streak, persists any change, and returns the current streak. */

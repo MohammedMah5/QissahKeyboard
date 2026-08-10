@@ -12,8 +12,8 @@ import {
   onAuthStateChanged,
   signOut,
 } from './firebase-init.js';
-import { userState, userProgress, resetUserProgress } from './state.js';
-import { userDocRef, saveNickname, loadUserProgress, syncLoginStreak } from './db.js';
+import { userState, userProgress, resetUserProgress, clearProStatus } from './state.js';
+import { userDocRef, saveNickname, loadUserProgress, syncLoginStreak, ensureUserDefaults } from './db.js';
 import { getDoc } from './firebase-init.js';
 import { showView, getCurrentViewName, render } from './ui.js';
 
@@ -136,11 +136,19 @@ async function ensureUserProfile(user) {
   userState.uid = user.uid;
   const ref = userDocRef(user.uid);
 
-  // Developer/admin status is strictly database-driven: read the `role` field
-  // from the user's Firestore document. No email-based fallback is used.
   const snap = await getDoc(ref);
   const data = snap.data() || {};
-  userState.isDeveloper = data.role === 'admin';
+
+  // Backfill missing schema fields (isPro, role) for pre-existing users whose
+  // documents were created before the lifetime-purchase model was introduced.
+  await ensureUserDefaults(user.uid, data);
+
+  // Sync Pro status from Firestore into local state + localStorage.
+  userState.isPro = data.isPro || false;
+
+  // Developer/admin status is strictly database-driven: read the `role` field
+  // from the user's Firestore document. No email-based fallback is used.
+  userState.isDeveloper = (data.role || '').trim().toLowerCase() === 'admin';
 
   if (data.nickname) {
     userState.isLoggedIn = true;
@@ -171,13 +179,14 @@ function handleSignedOut() {
   userState.wordsTyped = 0;
   userState.storiesFinished = 0;
   userState.streak = 0;
+  clearProStatus();
   resetUserProgress();
   render();
 }
 
 onAuthStateChanged(auth, (user) => {
   if (user) {
-    ensureUserProfile(user).catch((error) => console.error('Failed to load user profile', error));
+    ensureUserProfile(user).catch(() => {});
   } else {
     handleSignedOut();
   }

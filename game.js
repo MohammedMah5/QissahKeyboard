@@ -48,7 +48,7 @@ async function ensureAudioReady() {
     keySoundBuffer = await audioCtx.decodeAudioData(arrayBuffer);
     keySoundSlices = Object.values(config.defines || {});
   } catch (error) {
-    console.error('Failed to load keystroke sound sprite', error);
+    console.error('Audio load failed');
   }
 }
 
@@ -167,8 +167,14 @@ function updateHint() {
 }
 
 function pauseNarration() {
-  if (narrationAudio && !narrationAudio.paused) {
+  if (narrationAudio) {
     narrationAudio.pause();
+    narrationAudio.currentTime = 0;
+    if (narrationListener) {
+      narrationAudio.removeEventListener('timeupdate', narrationListener);
+      narrationListener = null;
+    }
+    narrationAudio = null;
   }
 }
 
@@ -226,6 +232,7 @@ gameToggleNarratorBtn.addEventListener('click', () => {
 });
 
 function loadScene(index) {
+  if (!gameState.story || !gameState.story.scenes) return;
   const scene = gameState.story.scenes[index];
   gameState.sceneIndex = index;
   gameState.chars = Array.from(scene.en);
@@ -235,9 +242,17 @@ function loadScene(index) {
   gameNextEl.hidden = true;
   skipAutoNewlines();
 
+  // Stop and clean up any previous narration before loading the new scene.
+  pauseNarration();
+
   // Use the scene's image when present; otherwise fall back to the story's cover image.
   const imageToRender = (scene.image || '').trim() || gameState.story.thumbnailUrl || '';
-  gameImageEl.style.backgroundImage = `url('${resolveImage(imageToRender)}')`;
+  const resolvedImage = resolveImage(imageToRender);
+  if (resolvedImage) {
+    gameImageEl.style.backgroundImage = `url('${resolvedImage}')`;
+  } else {
+    gameImageEl.style.backgroundImage = '';
+  }
   gameTranslationEl.textContent = scene.ar || '';
   gameProgressEl.textContent = `المشهد ${index + 1} من ${gameState.story.scenes.length}`;
   renderPrompt();
@@ -255,7 +270,7 @@ async function finishStory() {
       await markStoryComplete(gameState.story.id);
       await recordWordsTyped(userState.uid, gameState.wordsTypedThisStory);
     } catch (error) {
-      console.error('Failed to save story completion', error);
+      console.error('Save failed');
     }
   }
   completionModal.hidden = false;

@@ -58,8 +58,18 @@ export function getCurrentViewName() {
 
 // ------------------------- Render: Navbar -------------------------
 export function renderNavbar() {
-  // "ترقية" only shows for logged-in users still on the free tier
-  navUpgrade.hidden = !(userState.isLoggedIn && !userState.isPro);
+  // The upgrade button is shown for ALL logged-in users:
+  //   • Free tier → "افتح جميع القصص!" → opens the activation modal on click
+  //   • Pro tier  → "❤️ 😊" badge     → click is a no-op (joyful confirmation)
+  navUpgrade.hidden = !userState.isLoggedIn;
+
+  if (userState.isPro) {
+    navUpgrade.textContent = '❤️ 😊';
+    navUpgrade.classList.add('is-pro-badge');
+  } else {
+    navUpgrade.textContent = 'افتح جميع القصص!';
+    navUpgrade.classList.remove('is-pro-badge');
+  }
 
   // Developer-only controls: Studio access + a switch to preview as a normal user
   const isDevActive = userState.isLoggedIn && userState.isDeveloper;
@@ -134,9 +144,11 @@ export function renderCourseCards() {
     .map((course) => {
       const isCompleted = Boolean(userProgress[course.id]);
       const isPro = course.tier === 'pro';
+      const resolvedImage = resolveImage(course.thumbnailUrl);
+      const imageStyle = resolvedImage ? ` style="background-image: url('${resolvedImage}')"` : '';
       return `
       <article class="course-card ${isCompleted ? 'is-completed' : ''}" data-story-id="${course.id}">
-        <div class="course-card__image" style="background-image: url('${resolveImage(course.thumbnailUrl)}')">
+        <div class="course-card__image"${imageStyle}>
           <button
             class="course-card__check-btn ${isCompleted ? 'is-completed' : ''}"
             data-story-id="${course.id}"
@@ -208,7 +220,11 @@ navBrowse.addEventListener('click', () => showView('browse'));
 heroCta.addEventListener('click', () => showView('browse'));
 navAuthGuest.addEventListener('click', () => showView('auth'));
 navStudio.addEventListener('click', () => showView('studio'));
-navUpgrade.addEventListener('click', () => openUpgradeModal());
+// Upgrade button: Pro users see a joyful badge (no modal); free users open the activation modal
+navUpgrade.addEventListener('click', () => {
+  if (userState.isPro) return;
+  openUpgradeModal();
+});
 
 navDevToggle.addEventListener('click', () => {
   userState.devPreviewAsUser = !userState.devPreviewAsUser;
@@ -217,7 +233,7 @@ navDevToggle.addEventListener('click', () => {
 });
 
 // When a lifetime license is successfully activated, refresh the navbar
-// (this hides the upgrade button since the user is now Pro).
+// (this swaps the free-tier "افتح جميع القصص!" button for the "❤️ 😊" Pro badge).
 document.addEventListener('license-activated', () => {
   renderNavbar();
 });

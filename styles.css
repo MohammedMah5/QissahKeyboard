@@ -806,6 +806,7 @@ textarea.field__input {
   border-radius: 16px;
   box-shadow: var(--shadow-hard-lg);
   padding: 24px;
+  min-height: 9rem;
 }
 
 .game-prompt {
@@ -851,28 +852,29 @@ textarea.field__input {
 }
 
 .game-hint {
-  /* Anchored to the prompt box itself (not the viewport) so it tracks the text */
+  /* Anchored inside the prompt box — bottom-right corner, compact size */
   position: absolute;
-  top: 100px; /* رفعناه للأعلى قليلاً لتجنب ملامسة الإطار */
-  left: -300px; /* دفعناه إلى اليسار خارج الصندوق تماماً */
+  bottom: 12px;
+  right: -190px;
   background: #fff;
-  border: var(--border-thick);
-  border-radius: 10px;
-  box-shadow: var(--shadow-hard);
-  padding: 14px 18px;
+  border: 2px solid var(--color-black);
+  border-radius: 8px;
+  box-shadow: 3px 3px 0px var(--color-black);
+  padding: 6px 10px;
   font-weight: 800;
-  font-size: 1.5rem; /* Arabic translation significantly larger */
-  line-height: 1.4;
+  font-size: 0.95rem; /* relatively small */
+  line-height: 1.3;
   text-align: center;
   z-index: 5;
-  max-width: 260px;
+  max-width: 180px;
+  pointer-events: none;
 }
 
 .game-hint .game-hint__word {
   color: var(--color-purple);
   display: block;
-  font-size: 0.85rem;
-  margin-bottom: 4px;
+  font-size: 0.7rem;
+  margin-bottom: 2px;
 }
 
 /* "Next scene" control shown once a scene is fully typed (replaces auto-advance) */
@@ -1011,11 +1013,24 @@ textarea.field__input {
   color: #1E9E4A;
 }
 
-.upgrade-modal__checkout {
-  text-decoration: none;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
+/* Support note: tells users that more stories will be added for free with their support */
+.upgrade-modal__support-note {
+  margin: 0;
+  padding: 10px 12px;
+  background: #FFF3D6;
+  border: 2px solid var(--color-black);
+  border-radius: 8px;
+  box-shadow: 2px 2px 0px var(--color-black);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #333;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.upgrade-modal__support-note i {
+  color: var(--shape-square);
+  margin-inline-end: 6px;
 }
 
 .upgrade-modal__link {

@@ -115,12 +115,12 @@
           <div class="pas-feature-card">
             <div class="pas-feature-card__icon">🚀</div>
             <h3 class="pas-feature-card__title">طلاقة وسرعة طباعة</h3>
-            <p class="pas-feature-card__text">ابنِ ذاكرة عضلية قوية واكتب بالإنجليزية بسرعة واحترافية دون النظر للوحة المفاتيح.</p>
+            <p class="pas-feature-card__text">ابنِ ذاكرة عضلية قوية واقبض على الكتابة بالإنجليزية بسرعة واحترافية دون النظر لوحة المفاتيح.</p>
           </div>
           <div class="pas-feature-card">
             <div class="pas-feature-card__icon">🧠</div>
             <h3 class="pas-feature-card__title">حصيلة لغوية لا تُنسى</h3>
-            <p class="pas-feature-card__text">ترجمة فورية وتفاعلية للكلمات الصعبة داخل السياق (Contextual Learning) لتثبت المفردات في الذاكرة للأبد.</p>
+            <p class="pas-feature-card__text">ترجمة فورية وتفاعلية للكلمات الصعبة داخل السياق (Contextual Learning) لتثبيت المفردات في الذاكرة للأبد.</p>
           </div>
           <div class="pas-feature-card">
             <div class="pas-feature-card__icon">🌍</div>
@@ -320,16 +320,24 @@
         </div>
       </div>
     </section>
+
     <!-- ======================= VIEW G: UPGRADE PLAN ======================= -->
+    <!-- This page-level view is kept as a fallback landing for upgrade marketing.
+         The primary upgrade entry point is the navbar button, which opens the
+         upgrade modal below. No external payment links are referenced anywhere. -->
     <section class="view" id="view-upgrade" hidden>
       <div class="upgrade-wrapper">
         <div class="upgrade-card">
           <h2 class="upgrade-card__title">افتح جميع القصص!</h2>
-          <p class="upgrade-card__price">$3 <span>دفعة واحدة مدى الحياة</span></p>
+          <p class="upgrade-card__price">$5 <span>دفعة واحدة مدى الحياة</span></p>
           <ul class="upgrade-card__features">
             <li><i class="fa-solid fa-check"></i> الوصول إلى جميع القصص</li>
           </ul>
-          <a class="btn btn--cta" id="upgrade-checkout-btn" href="YOUR_LEMON_SQUEEZY_CHECKOUT_LINK" target="_blank" rel="noopener noreferrer">افتح جميع القصص</a>
+          <p class="upgrade-card__support-note">
+            <i class="fa-solid fa-heart"></i>
+            بدعمكم لهذا المشروع، سنضيف المزيد من القصص الجديدة مجانًا دون أي دفع إضافي!
+          </p>
+          <button class="btn btn--cta" id="upgrade-page-upgrade-btn">ترقية الآن</button>
         </div>
       </div>
     </section>
@@ -346,6 +354,9 @@
   </footer>
 
   <!-- ======================= UPGRADE / LICENSE MODAL ======================= -->
+  <!-- Direct upgrade flow: clicking the navbar "افتح جميع القصص!" button
+       opens this modal directly. No activation code required. No external
+       payment links — this is a placeholder for a real payment integration. -->
   <div class="modal-overlay" id="upgrade-modal" hidden>
     <div class="modal-card upgrade-modal-card">
 
@@ -354,14 +365,14 @@
         <i class="fa-solid fa-xmark"></i>
       </button>
 
-      <!-- ============ PRICING VIEW ============ -->
-      <div id="upgrade-modal-pricing">
+      <!-- ============ DIRECT UPGRADE VIEW ============ -->
+      <div id="upgrade-modal-activation">
         <h2 class="upgrade-modal__title">افتح جميع القصص!</h2>
         <p class="upgrade-modal__subtitle">وصول مدى الحياة لجميع القصص والمحتوى الاحترافي</p>
 
         <div class="upgrade-modal__price">
           <span class="upgrade-modal__price-currency">$</span>
-          <span class="upgrade-modal__price-value">3</span>
+          <span class="upgrade-modal__price-value">5</span>
           <span class="upgrade-modal__price-period">دفعة واحدة مدى الحياة</span>
         </div>
 
@@ -369,28 +380,12 @@
           <li><i class="fa-solid fa-check"></i> الوصول إلى جميع القصص</li>
         </ul>
 
-        <a class="btn btn--cta upgrade-modal__checkout" id="checkout-btn" href="YOUR_LEMON_SQUEEZY_CHECKOUT_LINK" target="_blank" rel="noopener noreferrer">
-          افتح جميع القصص
-        </a>
+        <p class="upgrade-modal__support-note">
+          <i class="fa-solid fa-heart"></i>
+          بدعمكم لهذا المشروع، سنضيف المزيد من القصص الجديدة مجانًا دون أي دفع إضافي!
+        </p>
 
-        <button type="button" class="upgrade-modal__link" id="has-key-link">لديك كود تفعيل؟</button>
-      </div>
-
-      <!-- =============== LICENSE ACTIVATION VIEW =============== -->
-      <div id="upgrade-modal-activation" hidden>
-        <h2 class="upgrade-modal__title">تفعيل الرخصة</h2>
-        <p class="upgrade-modal__subtitle">أدخل كود التفعيل الخاص بك</p>
-
-        <label class="field">
-          <span class="field__label">كود التفعيل</span>
-          <input type="text" class="field__input" id="activation-key-input" placeholder="e.g., TEST-KEY-123" autocomplete="off" spellcheck="false">
-        </label>
-
-        <p class="license-status" id="license-status" hidden></p>
-
-        <button type="button" class="btn btn--cta" id="submit-license-btn">تفعيل</button>
-
-        <a type="button" class="upgrade-modal__link" id="back-to-pricing-link">العودة إلى الأسعار</a>
+        <button type="button" class="btn btn--cta" id="upgrade-modal-upgrade-btn">ترقية الآن</button>
       </div>
 
     </div>

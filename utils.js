@@ -8,19 +8,16 @@ export function escapeHtml(value) {
   ));
 }
 
-// Bundled placeholder shown when a story/scene has no image (or an invalid path).
-// Relative so it resolves correctly on GitHub Pages.
-export const DEFAULT_PLACEHOLDER_IMAGE = './Assets/Sample.png';
-
 /**
- * Returns a non-empty image path, or the bundled placeholder as a graceful fallback.
+ * Normalizes image paths for safe use in CSS background-image URLs.
  * Local relative paths (e.g. "assets/cover.png" or "./assets/cover.png") are passed
  * through exactly as provided — no leading root slash is prepended — so they resolve
  * correctly on GitHub Pages. Absolute http(s) URLs are left untouched.
+ * Empty paths return an empty string so the caller can fall back to a cover image.
  */
 export function resolveImage(path) {
   const raw = String(path || '').trim();
-  if (!raw) return DEFAULT_PLACEHOLDER_IMAGE;
+  if (!raw) return '';
 
   // Strip any accidental leading "/" so relative paths stay relative (GitHub Pages-safe).
   // Absolute URLs (http/https, data:, etc.) are preserved as-is.

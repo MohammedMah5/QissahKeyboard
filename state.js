@@ -6,8 +6,9 @@
    set by another (e.g. developer status).
    ===================================================================== */
 
-// `uid`/`name`/`isDeveloper`/stats are populated from Firestore; `isPro` stays a
-// local mock toggle (not persisted) so tier-gated UI stays easy to test.
+// `uid`/`name`/`isDeveloper`/stats are populated from Firestore; `isPro` is a
+// lifetime-purchase flag persisted both in Firestore and localStorage so the
+// Pro status (and the UI it gates) survives page reloads.
 export const userState = {
   isLoggedIn: false,
   isPro: false,
@@ -44,3 +45,27 @@ export function setStories(list) {
 export const appState = {
   activeCategory: null,
 };
+
+// ------------------------- Pro status persistence -------------------------
+// localStorage key for the lifetime Pro flag.
+const PRO_STORAGE_KEY = 'qissah_isPro';
+
+// Hydrate isPro from localStorage as a fast local fallback.
+// (The authoritative value is refreshed from Firestore when the user signs in.)
+userState.isPro = localStorage.getItem(PRO_STORAGE_KEY) === 'true';
+
+/**
+ * Updates the Pro status across local state and localStorage.
+ * (The Firestore write is handled by the upgrade flow.)
+ * @param {boolean} isPro
+ */
+export function setProStatus(isPro) {
+  userState.isPro = isPro;
+  localStorage.setItem(PRO_STORAGE_KEY, String(isPro));
+}
+
+/** Resets the Pro flag — call on sign-out. */
+export function clearProStatus() {
+  userState.isPro = false;
+  localStorage.removeItem(PRO_STORAGE_KEY);
+}
