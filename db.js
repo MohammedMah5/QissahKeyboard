@@ -32,15 +32,19 @@ export async function loadCategoriesAndStories() {
     );
     setStories(storySnap.docs.map((d) => ({ id: d.id, ...d.data() })));
     appState.dataError = null;
+    return true;
   } catch (error) {
     // Never mask a fetch/permission failure with placeholder content — surface it.
-    console.error('Failed to load stories from Firestore:', error);
+    // Stories require an authenticated read (firestore.rules); a permission-denied
+    // here almost always means the fetch ran before Auth restored the session.
+    console.error('Failed to load stories from Firestore:', error?.code, error);
     appState.dataError =
       error?.code === 'permission-denied'
         ? 'لا يمكن الوصول إلى القصص حاليًا. يرجى تسجيل الدخول والمحاولة مرة أخرى.'
         : 'تعذّر تحميل القصص. تحقق من اتصالك بالإنترنت وحاول مجددًا.';
     setCategories([]);
     setStories([]);
+    return false;
   }
 }
 

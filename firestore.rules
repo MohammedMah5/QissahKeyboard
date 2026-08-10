@@ -29,12 +29,13 @@ service cloud.firestore {
 
     // --- Stories ---
     match /stories/{storyId} {
-      // Require authentication so anonymous visitors cannot enumerate
-      // studio-created stories. Anonymous landing-page reads fail gracefully
-      // and the app falls back to its bundled seed data (db.js).
-      // NOTE: free/pro tier gating is still enforced client-side only —
-      // any signed-in user can read pro story docs via direct queries.
-      allow read: if isAuthenticated();
+      // Public read so visitors can browse the story catalog before signing up
+      // (matches the marketing funnel: browse → sign up → play).
+      // Free/pro tier gating is enforced client-side at game launch.
+      // NOTE: any visitor can read pro story docs via direct queries — move pro
+      // content behind a backend (e.g. Cloud Functions) if true paywall
+      // enforcement is ever needed.
+      allow read: if true;
       allow write: if isAdmin();
     }
 

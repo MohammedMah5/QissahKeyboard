@@ -13,10 +13,10 @@ import {
   onAuthStateChanged,
   signOut,
 } from './firebase-init.js';
-import { userState, userProgress, resetUserProgress, clearProStatus } from './state.js';
-import { userDocRef, saveNickname, loadUserProgress, syncLoginStreak, ensureUserDefaults } from './db.js';
+import { userState, userProgress, resetUserProgress, clearProStatus, appState, categories } from './state.js';
+import { userDocRef, saveNickname, loadUserProgress, syncLoginStreak, ensureUserDefaults, loadCategoriesAndStories } from './db.js';
 import { getDoc } from './firebase-init.js';
-import { showView, getCurrentViewName, render } from './ui.js';
+import { showView, getCurrentViewName, render, renderSidebar, renderCourseCards } from './ui.js';
 
 const authForm = document.getElementById('auth-form');
 const authTitleEl = document.getElementById('auth-title');
@@ -175,6 +175,11 @@ async function ensureUserProfile(user) {
     userState.streak = await syncLoginStreak(user.uid, data);
     await loadUserProgress(user.uid);
     syncedUid = user.uid;
+    // Stories require an authenticated read — the startup fetch ran before the
+    // session was restored, so re-fetch now that request.auth is available.
+    await loadCategoriesAndStories();
+    if (!appState.activeCategory) appState.activeCategory = categories[0]?.id || null;
+    renderSidebar();
     render();
     // Returning users land on the Browse page once signed in from the Auth screen
     if (getCurrentViewName() === 'auth') showView('browse');
