@@ -104,13 +104,15 @@ firebase deploy --only storage:rules
 ├── storage.rules       # Firebase Storage security rules
 ├── firestore.indexes.json # Firestore composite indexes
 ├── manifest.json       # PWA manifest
-└── Assets/             # Static assets (images, audio, fonts)
+└── public/assets/      # Static assets (images, audio, fonts) — copied verbatim to dist/ by Vite
 ```
 
 ## Security
 
 - **Environment Variables:** All Firebase configuration is loaded from `.env`. Never commit `.env` to version control.
-- **Firestore Rules:** Strict client-side rules enforce authentication and ownership.
+- **Firebase Web Config:** The `VITE_FIREBASE_*` values are public-by-design client config (they ship in the browser bundle). Protect the project by restricting the API key via HTTP referrers in Google Cloud Console and by enforcing Firestore rules.
+- **Firestore Rules:** Strict client-side rules enforce authentication and ownership; story reads require a signed-in user.
+- **Pro Gating:** Free/pro tier gating is enforced client-side only. A signed-in user could read pro story documents via direct Firestore queries — move pro content behind a backend (e.g. Cloud Functions) if true paywall enforcement is needed.
 - **Storage Rules:** Public assets are readable; user uploads are isolated by UID.
 - **No Console Logs:** Production builds strip debug logging.
 

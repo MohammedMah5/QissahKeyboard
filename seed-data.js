@@ -13,16 +13,17 @@ function thumb(text, bg = '8C61E6') {
   // Scene images fall back to thumbnailUrl in game.js, so return empty for scenes
   if (text.startsWith('Scene')) return '';
   
-  // Use local images from Assets/Narrations when possible for reliable loading
+  // Use local images from public/assets/narrations when possible for reliable loading.
+  // Paths must match the on-disk casing exactly (lowercase) — GitHub Pages is case-sensitive.
   const localImages = {
-    'Build Your Idea': './Narrations/Enterprenurship/AlbaikStory1/Cover.png',
-    'Digital Marketing': './Narrations/Enterprenurship/Sooque.com/Cover.png',
-    'Team Management': './Narrations/Enterprenurship/AlbaikStory1/Cover.png',
-    'Crowdfunding': './Narrations/Enterprenurship/Talabat/Cover.png',
-    'Asian Cultures': './Narrations/Culture/Bajau/cover.png',
-    'Amazon Tribes': './Narrations/Culture/Korowai/Cover.png',
-    'Japanese Traditions': './Narrations/Culture/Sentinel/Cover.png',
-    'African Civilizations': './Narrations/Culture/Bajau/cover.png',
+    'Build Your Idea': './assets/narrations/enterprenurship/albaikstory1/cover.png',
+    'Digital Marketing': './assets/narrations/enterprenurship/sooque.com/cover.png',
+    'Team Management': './assets/narrations/enterprenurship/albaikstory1/cover.png',
+    'Crowdfunding': './assets/narrations/enterprenurship/talabat/cover.png',
+    'Asian Cultures': './assets/narrations/culture/bajau/cover.png',
+    'Amazon Tribes': './assets/narrations/culture/korowai/cover.png',
+    'Japanese Traditions': './assets/narrations/culture/sentinel/cover.png',
+    'African Civilizations': './assets/narrations/culture/bajau/cover.png',
   };
   if (localImages[text]) return localImages[text];
   return `https://placehold.co/700x400/${bg}/ffffff?text=${encodeURIComponent(text)}`;

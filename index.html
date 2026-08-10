@@ -4,12 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>قصة كيبورد | Qissah Keyboard</title>
-  <link rel="icon" type="image/svg+xml" href="./icon.svg">
-  <link rel="icon" href="./icon.png" type="image/png" sizes="512x512">
-  <link rel="icon" href="./icon.png" type="image/png" sizes="192x192">
-  <link rel="icon" href="./icon.png" type="image/png" sizes="32x32">
-  <link rel="icon" href="./icon.png" type="image/png" sizes="16x16">
-  <link rel="apple-touch-icon" href="./icon.png">
+  <!-- Favicons: the only icon asset is public/assets/icon.png (copied to dist/assets/ by Vite).
+       No icon.svg exists — the stale SVG reference was removed to avoid a 404. -->
+  <link rel="icon" href="./assets/icon.png" type="image/png" sizes="512x512">
+  <link rel="icon" href="./assets/icon.png" type="image/png" sizes="192x192">
+  <link rel="icon" href="./assets/icon.png" type="image/png" sizes="32x32">
+  <link rel="icon" href="./assets/icon.png" type="image/png" sizes="16x16">
+  <link rel="apple-touch-icon" href="./assets/icon.png">
   <link rel="manifest" href="manifest.json">
 
   <!-- Google Fonts: Cairo -->
@@ -29,7 +30,7 @@
   <header class="navbar" id="navbar">
     <!-- Far right: logo (cropped to hide the transparent padding baked into the source PNG) -->
     <div class="navbar__logo">
-      <img src="./Logo.png" alt="شعار قصة كيبورد">
+      <img src="./assets/Logo.png" alt="شعار قصة كيبورد">
     </div>
 
     <!-- Center/right links -->
@@ -257,12 +258,12 @@
 
           <label class="field">
             <span class="field__label">رابط صورة الغلاف</span>
-            <input type="text" class="field__input" id="studio-thumbnail" placeholder="assets/image.png">
+            <input type="text" class="field__input" id="studio-thumbnail" placeholder="./assets/image.png">
           </label>
 
           <label class="field">
             <span class="field__label">رابط ملف الصوت</span>
-            <input type="text" class="field__input" id="studio-audio-url" placeholder="assets/narration/story1.mp3">
+            <input type="text" class="field__input" id="studio-audio-url" placeholder="./assets/narrations/culture/bajau/audio.mp3">
           </label>
 
           <p class="auth-error" id="studio-error" hidden></p>

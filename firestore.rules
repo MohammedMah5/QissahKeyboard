@@ -29,9 +29,12 @@ service cloud.firestore {
 
     // --- Stories ---
     match /stories/{storyId} {
-      // Allow everyone to read so the UI can successfully render the lists and lock icons.
-      // (Your client-side code will handle blocking access to the actual content).
-      allow read: if true; 
+      // Require authentication so anonymous visitors cannot enumerate
+      // studio-created stories. Anonymous landing-page reads fail gracefully
+      // and the app falls back to its bundled seed data (db.js).
+      // NOTE: free/pro tier gating is still enforced client-side only —
+      // any signed-in user can read pro story docs via direct queries.
+      allow read: if isAuthenticated();
       allow write: if isAdmin();
     }
 

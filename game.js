@@ -40,9 +40,10 @@ async function ensureAudioReady() {
   if (audioCtx) return;
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   try {
+    // Files live under public/assets/ → copied to dist/assets/ by Vite
     const [soundRes, configRes] = await Promise.all([
-      fetch('./cherrymx-red-abs/sound.mp3'),
-      fetch('./cherrymx-red-abs/config.json'),
+      fetch('./assets/cherrymx-red-abs/sound.mp3'),
+      fetch('./assets/cherrymx-red-abs/config.json'),
     ]);
     const [arrayBuffer, config] = await Promise.all([soundRes.arrayBuffer(), configRes.json()]);
     keySoundBuffer = await audioCtx.decodeAudioData(arrayBuffer);
@@ -288,7 +289,7 @@ function onSceneComplete() {
 function advanceAfterScene() {
   if (!gameState.awaitingNext) return;
   // Play "next scene" sound effect without blocking the UI transition
-  new Audio('next.mp3').play().catch(() => {});
+  new Audio('./assets/next.mp3').play().catch(() => {});
   gameNextEl.hidden = true;
   gameState.awaitingNext = false;
   if (gameState.sceneIndex < gameState.story.scenes.length - 1) {
